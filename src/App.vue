@@ -1,9 +1,3 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import Greet from "./components/Greet.vue";
-</script>
-
 <template>
   <div class="container">
     <h1>Welcome to Komishon!</h1>
@@ -41,8 +35,9 @@ import Greet from "./components/Greet.vue";
         >rust-analyzer</a
       >
     </p>
-
-    <Greet />
+    <router-link to="/">Go home</router-link>
+    <router-link to="/files">Go to files</router-link>
+    <router-view />
   </div>
 </template>
 
