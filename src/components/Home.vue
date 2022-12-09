@@ -3,6 +3,7 @@
     <input id="greet-input" v-model="name" placeholder="Enter a name..." />
     <button type="button" @click="greet()">Greet</button>
     <button type="button" @click="selectFİle()">Select Folder</button>
+    <button type="button" @click="callBackend()">Call backend</button>
   </div>
 
   <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
@@ -31,15 +32,18 @@ async function selectFİle() {
   });
 
   console.log(dirSelect);
+  const testValue = await invoke("walk_and_save", { baseDir: dirSelect });
+  console.log(testValue);
+
   const paths = dirSelect.split("\\");
   const chosenFile = paths[paths.length - 1];
 
   chosenDir.value = chosenFile;
-  const files = await readDir(dirSelect, { recursive: true });
-  console.log(files);
+  // const files = await readDir(dirSelect, { recursive: true });
+  // console.log(files);
 
-  await writeTextFile("userFileData.json", JSON.stringify(files), {
-    dir: BaseDirectory.AppData,
-  });
+  // await writeTextFile("userFileData.json", JSON.stringify(files), {
+  //   dir: BaseDirectory.AppData,
+  // });
 }
 </script>
