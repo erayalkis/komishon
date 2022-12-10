@@ -14,10 +14,14 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn create_db_if_not_exists() {
-    let conn = sqlite::open("entries.db").expect("Error while accessing database");
+fn create_db_if_not_exists(to: &str) {
+    println!("{}", to);
+    let conn = sqlite::open(to).expect("Error while accessing database");
     let query = "
-        CREATE TABLE IF NOT EXISTS FILES (file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, byte_size INTEGER)
+        CREATE TABLE IF NOT EXISTS FILES (file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
+        CREATE UNIQUE INDEX IF NOT EXISTS unique_file_index ON FILES (file_type, path);
+        CREATE INDEX IF NOT EXISTS path_index ON FILES (path);
+        CREATE INDEX IF NOT EXISTS parent_path_index ON FILES (parent_path);
     ";
     conn.execute(query).expect("Error while executing SQL statement");
 }
@@ -34,38 +38,54 @@ fn return_map() -> HashMap<String, i32> {
 }
 
 #[tauri::command]
-fn walk_and_save(base_dir: &str) {
-    create_db_if_not_exists();
+fn walk_and_save(base_dir: &str, to: &str) {
+    create_db_if_not_exists(&to);
 
-    let conn = sqlite::open("entries.db").expect("Error while accessing database");
-    for entry in WalkDir::new(base_dir) {
+    let conn = sqlite::open(to).expect("Error while accessing database");
+    for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
-        println!("{}", entry.path().to_str().unwrap());
+        let entry_path_str = entry.path().to_str().unwrap();
+        println!("{}", entry_path_str);
     
         let entry_path = entry.clone().into_path();
         let entry_metadata = entry.metadata().expect("Error while reading entry metadata");
     
-        let base_statement = "INSERT INTO FILES (file_name, file_type, path, parent_path, is_dir, byte_size) VALUES (?, ?, ?, ?, ?, ?)";
+        let base_statement = "INSERT INTO FILES (file_name, file_type, path, parent_path, is_dir, is_base_dir, byte_size) VALUES (?, ?, ?, ?, ?, ?, ?)";
         let mut query = conn.prepare(base_statement).expect("Error while preparing SQL statement");
 
-        let path = entry_path.extension().unwrap_or(OsStr::new("File")).to_str();
-        let parent_path = entry_path.parent().expect("Error while raeding parent path").to_str();
+        let extension = entry_path.extension().unwrap_or(OsStr::new("File")).to_str();
+        let parent_path = entry_path.parent().unwrap().to_str();
         let is_dir = entry_metadata.is_dir() as i64;
+        let is_base_dir = (idx == 0) as i64;
 
         query.bind((1, entry.file_name().to_str())).unwrap();
-        query.bind((2, path)).unwrap();
-        query.bind((3, entry.path().to_str())).unwrap();
+        query.bind((2, extension)).unwrap();
+        query.bind((3, entry_path_str)).unwrap();
         query.bind((4, parent_path)).unwrap();
         query.bind((5, is_dir)).unwrap();
-        query.bind((6, entry_metadata.len() as i64)).unwrap();
+        query.bind((6, is_base_dir)).unwrap();
+        query.bind((7, entry_metadata.len() as i64)).unwrap();
 
-        query.next().expect("Error while executing SQL INSERT");
+        match query.next() {
+            Ok(_) => {
+                println!("Successfully inserted file data!");
+            }
+            Err(err) => {
+                println!("Error caught for {}", entry_path_str);
+                println!("{}", err);
+            }
+        }
     }
 }
 
 #[tauri::command]
-fn read_all_from_db() {
-    let conn = sqlite::open("entries.db").unwrap();
+fn walk_and_update(base_dir: &str, to: &str) {
+    let conn = sqlite::open(to).expect("Error while accessing database");
+}
+
+#[tauri::command]
+fn read_all_from_db(db_path: &str) {
+    let conn = sqlite::open(db_path).unwrap();
     let query = "SELECT * FROM FILES;";
     
     conn
@@ -73,6 +93,7 @@ fn read_all_from_db() {
         for &(name, value) in pairs.iter() {
             println!("{} = {}", name, value.unwrap());
         }
+        println!("-----------------");
         true
     })
     .unwrap();
