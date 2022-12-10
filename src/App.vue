@@ -37,6 +37,7 @@
     </p>
     <router-link to="/">Go home</router-link>
     <router-link to="/files">Go to files</router-link>
+    <router-link to="/dev">Go to debug page</router-link>
     <router-view />
   </div>
 </template>
