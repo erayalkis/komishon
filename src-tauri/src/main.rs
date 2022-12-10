@@ -3,8 +3,9 @@
     windows_subsystem = "windows"
 )]
 
-use std::{collections::HashMap, ffi::OsStr};
+use std::{collections::HashMap, ffi::OsStr, path::Path};
 
+use sqlite::{State};
 use walkdir::WalkDir;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -18,7 +19,9 @@ fn create_db_if_not_exists(to: &str) {
     println!("{}", to);
     let conn = sqlite::open(to).expect("Error while accessing database");
     let query = "
-        CREATE TABLE IF NOT EXISTS FILES (file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
+        CREATE TABLE IF NOT EXISTS FILES (ID INTEGER PRIMARY KEY AUTOINCREMENT, file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
+        CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id TEXT);
+        CREATE TABLE IF NOT EXISTS DEADLINES (ID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME, parent_path TEXT, parent_id TEXT);
         CREATE UNIQUE INDEX IF NOT EXISTS unique_file_index ON FILES (file_type, path);
         CREATE INDEX IF NOT EXISTS path_index ON FILES (path);
         CREATE INDEX IF NOT EXISTS parent_path_index ON FILES (parent_path);
@@ -28,7 +31,6 @@ fn create_db_if_not_exists(to: &str) {
 
 #[tauri::command]
 fn return_map() -> HashMap<String, i32> {
-    let conn = sqlite::open("entries.db");
     let mut test_hashmap = HashMap::new();
     test_hashmap.insert(String::from("Blue"), 0);
     test_hashmap.insert(String::from("Green"), 1);
@@ -79,8 +81,36 @@ fn walk_and_save(base_dir: &str, to: &str) {
 }
 
 #[tauri::command]
-fn walk_and_update(base_dir: &str, to: &str) {
-    let conn = sqlite::open(to).expect("Error while accessing database");
+fn remove_invalid_files_from_db(db_path: &str) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "SELECT * FROM FILES;";
+    let mut statement = conn.prepare(query).unwrap();
+
+    while let Ok(State::Row) = statement.next() {
+        let file_path_string = statement.read::<String, _>("path").unwrap();
+        let copy = file_path_string.clone();
+        println!("Reading: {}", file_path_string);
+
+        let path = Path::new(&copy);
+        println!("Is valid? {}", path.exists());
+
+        if path.exists() == false {
+            let delete_query = "DELETE FROM FILES WHERE path = ?";
+            let mut query = conn.prepare(delete_query).unwrap();
+
+            query.bind((1, &file_path_string[..])).unwrap();
+
+            match query.next() {
+                Ok(_) => {
+                    println!("Successfully deleted {}", file_path_string);
+                }
+                Err(err) => {
+                    println!("Error while deleting {}", file_path_string);
+                    println!("{}", err);
+                }
+            } 
+        }
+    }
 }
 
 #[tauri::command]
@@ -100,8 +130,8 @@ fn read_all_from_db(db_path: &str) {
 }
 
 fn main() {
-    let app = tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db])
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
