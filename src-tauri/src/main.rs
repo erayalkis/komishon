@@ -5,8 +5,31 @@
 
 use std::{collections::HashMap, ffi::OsStr, path::Path};
 
+use serde::{Serialize, Deserialize};
 use sqlite::{State};
 use walkdir::WalkDir;
+
+#[derive(Serialize, Deserialize)]
+struct File {
+    id: i64,
+    file_name: String,
+    file_type: String,
+    path: String,
+    parent_path: String,
+    is_dir: i64,
+    is_base_dir: i64,
+    byte_size: i64,
+    // tags: Vec<Tag<'a>>,
+    // deadlines: Vec<String>
+}
+
+#[derive(Serialize, Deserialize)]
+struct Tag {
+    id: usize,
+    tag_name: String,
+    parent_path: String,
+    parent_id: usize,
+}
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -20,8 +43,8 @@ fn create_db_if_not_exists(to: &str) {
     let conn = sqlite::open(to).expect("Error while accessing database");
     let query = "
         CREATE TABLE IF NOT EXISTS FILES (ID INTEGER PRIMARY KEY AUTOINCREMENT, file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
-        CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id TEXT);
-        CREATE TABLE IF NOT EXISTS DEADLINES (ID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME, parent_path TEXT, parent_id TEXT);
+        CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id ID);
+        CREATE TABLE IF NOT EXISTS DEADLINES (ID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME, parent_path TEXT, parent_id ID);
         CREATE UNIQUE INDEX IF NOT EXISTS unique_file_index ON FILES (file_type, path);
         CREATE INDEX IF NOT EXISTS path_index ON FILES (path);
         CREATE INDEX IF NOT EXISTS parent_path_index ON FILES (parent_path);
@@ -129,9 +152,52 @@ fn read_all_from_db(db_path: &str) {
     .unwrap();
 }
 
+#[tauri::command]
+fn get_base_dirs(db_path: &str) -> String {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
+    let mut statement = conn.prepare(query).unwrap();
+
+    let mut files: Vec<File> = Vec::new();
+    while let Ok(State::Row) = statement.next() {
+        let file = File {
+            id: statement.read::<i64, _>("ID").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap()
+        };
+        files.push(file);
+    }
+
+    let serialized = serde_json::to_string(&files).unwrap();
+
+    return serialized;
+}
+
+#[tauri::command]
+fn get_children_of(db_path: &str, path: &str) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "SELECT * FROM FILES WHERE parent_path = ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, path)).unwrap();
+
+    while let Ok(State::Row) = statement.next() {
+
+    }
+}
+
+// #[tauri::command]
+// fn add_deadline_to_file(file_path: &str, db_path: &str) {
+
+// }
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db])
+        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db, get_children_of, get_base_dirs])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
