@@ -44,6 +44,22 @@ async function selectFile() {
 
 async function callBackend() {
   const appDataPath = await appDataDir();
-  await invoke("read_all_from_db", { dbPath: `${appDataPath}/entries.db` });
+  let res = await invoke("get_base_dirs", {
+    dbPath: `${appDataPath}/entries.db`,
+  });
+  let parsed = JSON.parse(res);
+  console.log(parsed);
+  let children = await getChildren(parsed[0].path);
+  console.log(children);
+}
+
+async function getChildren(basePath) {
+  const appDataPath = await appDataDir();
+  let res = await invoke("get_children_of", {
+    dbPath: `${appDataPath}/entries.db`,
+    path: basePath,
+  });
+  let parsed = JSON.parse(res);
+  return parsed;
 }
 </script>

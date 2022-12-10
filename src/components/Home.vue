@@ -4,7 +4,6 @@
     <button type="button" @click="greet()">Greet</button>
   </div>
 
-  <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
   <p>{{ greetMsg }}</p>
 </template>
 
