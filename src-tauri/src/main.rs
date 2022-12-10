@@ -179,15 +179,30 @@ fn get_base_dirs(db_path: &str) -> String {
 }
 
 #[tauri::command]
-fn get_children_of(db_path: &str, path: &str) {
+fn get_children_of(db_path: &str, path: &str) -> String {
     let conn = sqlite::open(db_path).unwrap();
     let query = "SELECT * FROM FILES WHERE parent_path = ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, path)).unwrap();
 
+    let mut files: Vec<File> = Vec::new();
     while let Ok(State::Row) = statement.next() {
-
+        let file = File {
+            id: statement.read::<i64, _>("ID").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap()
+        };
+        files.push(file);
     }
+
+    let serialized = serde_json::to_string(&files).unwrap();
+
+    return serialized;
 }
 
 // #[tauri::command]
