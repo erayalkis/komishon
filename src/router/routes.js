@@ -9,6 +9,11 @@ const routes = [
     name: "Files",
     component: () => import("@/components/Files.vue"),
   },
+  {
+    path: "/dev",
+    name: "Debug",
+    component: () => import("@/components/Dev.vue"),
+  },
 ];
 
 export default routes;
