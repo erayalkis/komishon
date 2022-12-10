@@ -46,4 +46,8 @@ async function selectFİle() {
   //   dir: BaseDirectory.AppData,
   // });
 }
+
+async function callBackend() {
+  await invoke("read_all_from_db");
+}
 </script>
