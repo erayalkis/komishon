@@ -5,8 +5,14 @@
   </div>
 
   <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
+  <template v-for="dir in paths">
+    <a @click="makeChildMain(dir)"
+      ><div>{{ dir.path }}</div></a
+    >
+  </template>
   <template v-for="child in children">
     <div>{{ child.file_name }}</div>
+    <button v-if="child.is_dir" @click="makeChildMain(child)">Go</button>
   </template>
 </template>
 
@@ -17,7 +23,9 @@ import { open } from "@tauri-apps/api/dialog";
 import { appDataDir } from "@tauri-apps/api/path";
 
 const chosenDir = ref("");
-const children = ref([]);
+// const children = ref([]);
+const children = computed(() => store.state.children);
+const paths = ref([]);
 
 async function selectFile() {
   const appDataPath = await appDataDir();
@@ -53,18 +61,9 @@ async function callBackend() {
   });
   let parsed = JSON.parse(res);
   console.log(parsed);
-  let dirChildren = await getChildren(parsed[0].path);
-  console.log(children);
-  children.value = dirChildren;
-}
-
-async function getChildren(basePath) {
-  const appDataPath = await appDataDir();
-  let res = await invoke("get_children_of", {
-    dbPath: `${appDataPath}/entries.db`,
-    path: basePath,
-  });
-  let parsed = JSON.parse(res);
-  return parsed;
+  children.value = parsed;
+  // let dirChildren = await getChildren(parsed[0].path);
+  // console.log(children);
+  // children.value = dirChildren;
 }
 </script>

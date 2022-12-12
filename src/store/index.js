@@ -1,5 +1,5 @@
-const { createStore } = require("vuex");
-const { filesystem } = require("./modules/file");
+import { createStore } from "vuex";
+import filesystem from "./modules/filesystem/file";
 
 const store = createStore({
   modules: {
