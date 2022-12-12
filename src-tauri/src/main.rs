@@ -39,9 +39,9 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 fn create_db_if_not_exists(to: &str) {
-    println!("{}", to);
     let conn = sqlite::open(to).expect("Error while accessing database");
     let query = "
+        PRAGMA journal_mode=WAL;
         CREATE TABLE IF NOT EXISTS FILES (ID INTEGER PRIMARY KEY AUTOINCREMENT, file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
         CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id ID);
         CREATE TABLE IF NOT EXISTS DEADLINES (ID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME, parent_path TEXT, parent_id ID);
@@ -62,20 +62,17 @@ fn return_map() -> HashMap<String, i32> {
     return test_hashmap;
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 fn walk_and_save(base_dir: &str, to: &str) {
-    create_db_if_not_exists(&to);
-
     let conn = sqlite::open(to).expect("Error while accessing database");
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
         let entry_path_str = entry.path().to_str().unwrap();
-        println!("{}", entry_path_str);
     
         let entry_path = entry.clone().into_path();
         let entry_metadata = entry.metadata().expect("Error while reading entry metadata");
     
-        let base_statement = "INSERT INTO FILES (file_name, file_type, path, parent_path, is_dir, is_base_dir, byte_size) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        let base_statement = "INSERT INTO FILES (file_name, file_type, path, parent_path, is_dir, is_base_dir, byte_size) VALUES (?, ?, ?, ?, ?, ?, ?);";
         let mut query = conn.prepare(base_statement).expect("Error while preparing SQL statement");
 
         let extension = entry_path.extension().unwrap_or(OsStr::new("File")).to_str();
@@ -93,7 +90,6 @@ fn walk_and_save(base_dir: &str, to: &str) {
 
         match query.next() {
             Ok(_) => {
-                println!("Successfully inserted file data!");
             }
             Err(err) => {
                 println!("Error caught for {}", entry_path_str);
@@ -112,10 +108,8 @@ fn remove_invalid_files_from_db(db_path: &str) {
     while let Ok(State::Row) = statement.next() {
         let file_path_string = statement.read::<String, _>("path").unwrap();
         let copy = file_path_string.clone();
-        println!("Reading: {}", file_path_string);
 
         let path = Path::new(&copy);
-        println!("Is valid? {}", path.exists());
 
         if path.exists() == false {
             let delete_query = "DELETE FROM FILES WHERE path = ?";
@@ -125,7 +119,6 @@ fn remove_invalid_files_from_db(db_path: &str) {
 
             match query.next() {
                 Ok(_) => {
-                    println!("Successfully deleted {}", file_path_string);
                 }
                 Err(err) => {
                     println!("Error while deleting {}", file_path_string);
@@ -212,7 +205,7 @@ fn get_children_of(db_path: &str, path: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db, get_children_of, get_base_dirs])
+        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db, get_children_of, get_base_dirs, create_db_if_not_exists])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
