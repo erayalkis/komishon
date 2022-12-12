@@ -32,7 +32,7 @@ const filesystem = {
     },
     truncatePaths(state, idx) {
       const paths = state.paths;
-      const trunc = paths.splice(0, idx);
+      const trunc = paths.slice(0, idx + 1);
       state.paths = trunc;
     },
   },
@@ -70,15 +70,18 @@ const filesystem = {
       let parsed = JSON.parse(res);
       commit("setChildren", parsed);
     },
-    async navigateTo({ commit, state, dispatch }, dir, idx = null) {
+    async navigateTo({ commit, state, dispatch }, { dir, idx }) {
       if (dir.path == lastEleOf(state.paths).path) return;
 
       // let dirChildren = await dispatch("fetchChildrenOf", dir);
       // console.log(dirChildren);
+      console.log(idx);
       commit("setCurrentDir", dir);
       commit("addToPaths", dir);
-      if (idx) commit("truncatePaths", idx);
-      await dispatch("fetchChildrenOf", dir);
+      if (idx !== null) commit("truncatePaths", idx);
+      dir.path == "/"
+        ? await dispatch("loadInitialDirs")
+        : await dispatch("fetchChildrenOf", dir);
     },
   },
   getters: {},
