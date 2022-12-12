@@ -42,6 +42,16 @@
   </div>
 </template>
 
+<script setup>
+import { onBeforeMount } from "vue";
+import { useStore } from "vuex";
+const { dispatch } = useStore();
+
+onBeforeMount(() => {
+  dispatch("loadInitialDirs");
+});
+</script>
+
 <style scoped>
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);

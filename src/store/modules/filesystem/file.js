@@ -37,6 +37,17 @@ const filesystem = {
     },
   },
   actions: {
+    async loadInitialDirs({ commit }) {
+      // TODO: maybe load users last dir on the history after they close the app?
+      const appDataPath = await appDataDir();
+
+      let res = await invoke("get_base_dirs", {
+        dbPath: `${appDataPath}/entries.db`,
+      });
+
+      let parsed = JSON.parse(res);
+      commit("setChildren", parsed);
+    },
     async fetchBaseDirs({ commit }) {
       const appDataPath = await appDataDir();
 
@@ -59,14 +70,15 @@ const filesystem = {
       let parsed = JSON.parse(res);
       commit("setChildren", parsed);
     },
-    async navigateTo({ commit, state }, dir, idx = null) {
+    async navigateTo({ commit, state, dispatch }, dir, idx = null) {
       if (dir.path == lastEleOf(state.paths).path) return;
 
-      let dirChildren = await getChildren(v.path);
+      // let dirChildren = await dispatch("fetchChildrenOf", dir);
+      // console.log(dirChildren);
       commit("setCurrentDir", dir);
       commit("addToPaths", dir);
       if (idx) commit("truncatePaths", idx);
-      commit("setChildren", dirChildren);
+      await dispatch("fetchChildrenOf", dir);
     },
   },
   getters: {},

@@ -5,27 +5,29 @@
   </div>
 
   <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
-  <template v-for="dir in paths">
-    <a @click="makeChildMain(dir)"
+  <template v-for="(dir, idx) in paths">
+    <a @click="goTo(dir, idx)"
       ><div>{{ dir.path }}</div></a
     >
   </template>
   <template v-for="child in children">
     <div>{{ child.file_name }}</div>
-    <button v-if="child.is_dir" @click="makeChildMain(child)">Go</button>
+    <button v-if="child.is_dir" @click="goTo(child)">Go</button>
   </template>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 import { appDataDir } from "@tauri-apps/api/path";
+import { useStore } from "vuex";
+const { state, dispatch } = useStore();
 
 const chosenDir = ref("");
 // const children = ref([]);
-const children = computed(() => store.state.children);
-const paths = ref([]);
+const children = computed(() => state.files.children);
+const paths = computed(() => state.files.paths);
 
 async function selectFile() {
   const appDataPath = await appDataDir();
@@ -52,6 +54,10 @@ async function selectFile() {
   // await writeTextFile("userFileData.json", JSON.stringify(files), {
   //   dir: BaseDirectory.AppData,
   // });
+}
+
+async function goTo(dir, idx = null) {
+  dispatch("navigateTo", dir, idx);
 }
 
 async function callBackend() {
