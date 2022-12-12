@@ -43,12 +43,16 @@
 </template>
 
 <script setup>
+import { appDataDir } from "@tauri-apps/api/path";
+import { invoke } from "@tauri-apps/api/tauri";
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
 const { dispatch } = useStore();
 
-onBeforeMount(() => {
-  dispatch("loadInitialDirs");
+onBeforeMount(async () => {
+  const appData = await appDataDir();
+  await invoke("create_db_if_not_exists", { to: `${appData}/entries.db` });
+  await dispatch("loadInitialDirs");
 });
 </script>
 
