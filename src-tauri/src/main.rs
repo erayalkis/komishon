@@ -198,12 +198,35 @@ fn get_children_of(db_path: &str, path: &str) -> String {
     return serialized;
 }
 
-// #[tauri::command]
-// fn add_deadline_to_file(file: File, db_path: &str) {
-//     let conn = sqlite::open(db_path).unwrap();
-//     let query = "INSERT INTO deadlines";
-//     let mut statement = conn.prepare(query).unwrap();
-// }
+#[tauri::command]
+fn add_tag_to_file() {
+
+}
+
+#[tauri::command]
+fn remove_tag_from_file() {
+
+}
+
+#[tauri::command]
+fn update_file_tag() {
+
+}
+
+#[tauri::command]
+fn add_deadline_to_file() {
+
+}
+
+#[tauri::command]
+fn remove_deadline_from_file() {
+
+}
+
+#[tauri::command]
+fn update_file_deadline() {
+    
+}
 
 fn main() {
     tauri::Builder::default()
