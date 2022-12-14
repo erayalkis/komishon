@@ -19,25 +19,26 @@ struct File {
     is_dir: i64,
     is_base_dir: i64,
     byte_size: i64,
-    // tags: Vec<Tag<'a>>,
-    // deadlines: Vec<String>
+    tags: Option<Vec<Tag>>,
+    deadlines: Option<Vec<Deadline>>
 }
 
 #[derive(Serialize, Deserialize)]
 struct Tag {
-    id: i64,
+    id: Option<i64>,
     tag_name: String,
     parent_path: String,
     parent_id: i64,
+    color: String
 }
 
 #[derive(Serialize, Deserialize)]
 struct Deadline {
-    id: i64,
+    id: Option<i64>,
     title: String,
-    date: String,
+    date: i64,
     parent_path: String,
-    parent_id: String
+    parent_id: i64
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -52,7 +53,7 @@ fn create_db_if_not_exists(to: &str) {
     let query = "
         PRAGMA journal_mode=WAL;
         CREATE TABLE IF NOT EXISTS FILES (ID INTEGER PRIMARY KEY AUTOINCREMENT, file_name TEXT, file_type TEXT, path TEXT, parent_path TEXT, is_dir INTEGER, is_base_dir INTEGER, byte_size INTEGER);
-        CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id INTEGER);
+        CREATE TABLE IF NOT EXISTS TAGS (ID INTEGER PRIMARY KEY AUTOINCREMENT, tag_name TEXT, parent_path TEXT, parent_id INTEGER, color TEXT);
         CREATE TABLE IF NOT EXISTS DEADLINES (ID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME, parent_path TEXT, parent_id INTEGER);
         CREATE UNIQUE INDEX IF NOT EXISTS unique_file_index ON FILES (file_type, path);
         CREATE INDEX IF NOT EXISTS path_index ON FILES (path);
@@ -170,7 +171,9 @@ fn get_base_dirs(db_path: &str) -> String {
             parent_path: statement.read::<String, _>("parent_path").unwrap(),
             is_dir: statement.read::<i64, _>("is_dir").unwrap(),
             is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
-            byte_size: statement.read::<i64, _>("byte_size").unwrap()
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: None,
+            deadlines: None
         };
         files.push(file);
     }
@@ -197,7 +200,9 @@ fn get_children_of(db_path: &str, path: &str) -> String {
             parent_path: statement.read::<String, _>("parent_path").unwrap(),
             is_dir: statement.read::<i64, _>("is_dir").unwrap(),
             is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
-            byte_size: statement.read::<i64, _>("byte_size").unwrap()
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: None,
+            deadlines: None
         };
         files.push(file);
     }
@@ -210,14 +215,17 @@ fn get_children_of(db_path: &str, path: &str) -> String {
 #[tauri::command]
 fn add_tag_to_file(db_path: &str, tag: Tag) {
     let conn = sqlite::open(db_path).unwrap();
-    let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id) VALUES (?, ?, ?)";
+    let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &tag.tag_name[..])).unwrap();
     statement.bind((2, &tag.parent_path[..])).unwrap();
     statement.bind((3, tag.parent_id)).unwrap();
+    statement.bind((4, &tag.color[..])).unwrap();
 
     match statement.next() {
-        Ok(_) => {}
+        Ok(_) => { 
+            println!("Added tag");
+        }
         Err(err) => {
             println!("Error while saving tag: {}", err);
         }
@@ -245,11 +253,14 @@ fn remove_tag_from_file(db_path: &str, tag: Tag) {
 // }
 
 #[tauri::command]
-fn add_deadline_to_file(db_path: &str, tag: Tag) {
+fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
     let conn = sqlite::open(db_path).unwrap();
-    let query = "DELETE FROM TAGS WHERE id == ?";
+    let query = "INSERT INTO DEADLINES(title, date, parent_path, parent_id) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
-    statement.bind((1, tag.id)).unwrap();
+    statement.bind((1, &deadline.title[..])).unwrap();
+    statement.bind((2, deadline.date)).unwrap();
+    statement.bind((3, &deadline.parent_path[..])).unwrap();
+    statement.bind((4, deadline.parent_id)).unwrap();
 
     match statement.next() {
         Ok(_) => {}
@@ -280,7 +291,7 @@ fn update_file_deadline(db_path: &str, deadline: Deadline) {
     let query = "UPDATE DEADLINES SET title = ?, date = ? WHERE id = ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &deadline.title[..])).unwrap();
-    statement.bind((2, &deadline.date[..])).unwrap();
+    statement.bind((2, deadline.date)).unwrap();
     statement.bind((3, deadline.id)).unwrap();
 
     match statement.next() {
@@ -293,7 +304,21 @@ fn update_file_deadline(db_path: &str, deadline: Deadline) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, return_map, walk_and_save, read_all_from_db, remove_invalid_files_from_db, get_children_of, get_base_dirs, create_db_if_not_exists])
+        .invoke_handler(tauri::generate_handler![
+            greet, 
+            return_map, 
+            walk_and_save, 
+            read_all_from_db, 
+            remove_invalid_files_from_db, 
+            get_children_of, 
+            get_base_dirs, 
+            create_db_if_not_exists,
+            add_tag_to_file,
+            remove_tag_from_file,
+            add_deadline_to_file,
+            update_file_deadline,
+            remove_deadline_from_file
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

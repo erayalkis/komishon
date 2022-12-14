@@ -5,14 +5,26 @@
   </div>
 
   <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
-  <template v-for="(dir, idx) in paths">
-    <a @click="goTo(dir, idx)"
-      ><div>{{ dir.path }}</div></a
-    >
-  </template>
+  <div style="display: flex; margin-right: auto; margin-left: auto">
+    <template v-for="(dir, idx) in paths">
+      <a @click="goTo(dir, idx)"
+        ><div>{{ dir.path }}/</div></a
+      >
+    </template>
+  </div>
   <template v-for="child in children">
-    <div>{{ child.file_name }}</div>
-    <button v-if="child.is_dir" @click="goTo(child)">Go</button>
+    <div style="text-align: center">
+      <div>
+        <div>{{ child.id }} | {{ child.file_name }}</div>
+        <div v-if="!child.is_dir">
+          <a @click="addTag(child)">Add tag</a>
+          <a @click="addDeadline(child)">Add deadline</a>
+        </div>
+      </div>
+      <button v-if="child.is_dir" @click="goTo(child)" style="width: 50%">
+        Go
+      </button>
+    </div>
   </template>
 </template>
 
@@ -58,6 +70,36 @@ async function selectFile() {
 
 async function goTo(dir, idx = null) {
   dispatch("navigateTo", { dir, idx });
+}
+
+async function addTag(dir, tagData) {
+  const appDataPath = await appDataDir();
+  tagData = {
+    tag_name: "test_tag",
+    parent_path: dir.path,
+    parent_id: dir.id,
+    color: "#00000",
+  };
+  // console.log(tagData);
+  invoke("add_tag_to_file", {
+    dbPath: `${appDataPath}/entries.db`,
+    tag: tagData,
+  });
+}
+
+async function addDeadline(dir, deadlineData) {
+  const appDataPath = await appDataDir();
+  deadlineData = {
+    title: "test deadline",
+    date: Date.now(),
+    parent_id: dir.id,
+    parent_path: dir.path,
+  };
+  // console.log(tagData);
+  invoke("add_deadline_to_file", {
+    dbPath: `${appDataPath}/entries.db`,
+    deadline: deadlineData,
+  });
 }
 
 async function callBackend() {
