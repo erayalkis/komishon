@@ -57,7 +57,7 @@ async function selectFile() {
 }
 
 async function goTo(dir, idx = null) {
-  dispatch("navigateTo", dir, idx);
+  dispatch("navigateTo", { dir, idx });
 }
 
 async function callBackend() {
