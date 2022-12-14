@@ -183,7 +183,7 @@ fn get_base_dirs(db_path: &str) -> String {
 #[tauri::command]
 fn get_children_of(db_path: &str, path: &str) -> String {
     let conn = sqlite::open(db_path).unwrap();
-    let query = "SELECT * FROM FILES WHERE parent_path = ? ORDER is_dir";
+    let query = "SELECT * FROM FILES WHERE parent_path = ? ORDER BY is_dir DESC";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, path)).unwrap();
 
