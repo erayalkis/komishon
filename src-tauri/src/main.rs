@@ -25,10 +25,19 @@ struct File {
 
 #[derive(Serialize, Deserialize)]
 struct Tag {
-    id: usize,
+    id: i64,
     tag_name: String,
     parent_path: String,
-    parent_id: usize,
+    parent_id: i64,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Deadline {
+    id: i64,
+    title: String,
+    date: String,
+    parent_path: String,
+    parent_id: String
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -174,7 +183,7 @@ fn get_base_dirs(db_path: &str) -> String {
 #[tauri::command]
 fn get_children_of(db_path: &str, path: &str) -> String {
     let conn = sqlite::open(db_path).unwrap();
-    let query = "SELECT * FROM FILES WHERE parent_path = ?";
+    let query = "SELECT * FROM FILES WHERE parent_path = ? ORDER is_dir";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, path)).unwrap();
 
@@ -199,33 +208,87 @@ fn get_children_of(db_path: &str, path: &str) -> String {
 }
 
 #[tauri::command]
-fn add_tag_to_file() {
+fn add_tag_to_file(db_path: &str, tag: Tag) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id) VALUES (?, ?, ?)";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, &tag.tag_name[..])).unwrap();
+    statement.bind((2, &tag.parent_path[..])).unwrap();
+    statement.bind((3, tag.parent_id)).unwrap();
 
+    match statement.next() {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Error while saving tag: {}", err);
+        }
+    }
 }
 
 #[tauri::command]
-fn remove_tag_from_file() {
+fn remove_tag_from_file(db_path: &str, tag: Tag) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "DELETE FROM TAGS WHERE id == ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, tag.id)).unwrap();
 
+    match statement.next() {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Error while deleting tag: {}", err);
+        }
+    }
+}
+
+// #[tauri::command]
+// fn update_file_tag() {
+
+// }
+
+#[tauri::command]
+fn add_deadline_to_file(db_path: &str, tag: Tag) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "DELETE FROM TAGS WHERE id == ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, tag.id)).unwrap();
+
+    match statement.next() {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Error while deleting tag: {}", err);
+        }
+    }
 }
 
 #[tauri::command]
-fn update_file_tag() {
+fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "DELETE FROM DEADLINES WHERE id = ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, deadline.id)).unwrap();
 
+    match statement.next() {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Error while deleting deadline: {}", err);
+        }
+    }
 }
 
 #[tauri::command]
-fn add_deadline_to_file() {
+fn update_file_deadline(db_path: &str, deadline: Deadline) {
+    let conn = sqlite::open(db_path).unwrap();
+    let query = "UPDATE DEADLINES SET title = ?, date = ? WHERE id = ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, &deadline.title[..])).unwrap();
+    statement.bind((2, &deadline.date[..])).unwrap();
+    statement.bind((3, deadline.id)).unwrap();
 
-}
-
-#[tauri::command]
-fn remove_deadline_from_file() {
-
-}
-
-#[tauri::command]
-fn update_file_deadline() {
-    
+    match statement.next() {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Error while deleting deadline: {}", err);
+        }
+    }
 }
 
 fn main() {
