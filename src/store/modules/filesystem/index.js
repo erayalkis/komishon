@@ -84,6 +84,20 @@ const filesystem = {
         ? await dispatch("loadInitialDirs")
         : await dispatch("fetchChildrenOf", dir);
     },
+    async selectFolder() {
+      const appDataPath = await appDataDir();
+
+      const dirSelect = open({
+        directory: true,
+        multiple: false,
+      });
+
+      console.log(dirSelect);
+      const testValue = await invoke("walk_and_save", {
+        baseDir: dirSelect,
+        to: `${appDataPath}/entries.db`,
+      });
+    },
   },
   getters: {},
 };

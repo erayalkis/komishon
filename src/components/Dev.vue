@@ -60,31 +60,10 @@ async function selectFile() {
   const chosenFile = paths[paths.length - 1];
 
   chosenDir.value = chosenFile;
-  // const files = await readDir(dirSelect, { recursive: true });
-  // console.log(files);
-
-  // await writeTextFile("userFileData.json", JSON.stringify(files), {
-  //   dir: BaseDirectory.AppData,
-  // });
 }
 
 async function goTo(dir, idx = null) {
   dispatch("navigateTo", { dir, idx });
-}
-
-async function addTag(dir, tagData) {
-  const appDataPath = await appDataDir();
-  tagData = {
-    tag_name: "test_tag",
-    parent_path: dir.path,
-    parent_id: dir.id,
-    color: "#00000",
-  };
-  // console.log(tagData);
-  invoke("add_tag_to_file", {
-    dbPath: `${appDataPath}/entries.db`,
-    tag: tagData,
-  });
 }
 
 async function addDeadline(dir, deadlineData) {
