@@ -68,6 +68,7 @@ const filesystem = {
       });
 
       let parsed = JSON.parse(res);
+      console.log(parsed);
       commit("setChildren", parsed);
     },
     async navigateTo({ commit, state, dispatch }, { dir, idx }) {

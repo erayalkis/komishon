@@ -247,9 +247,7 @@ fn get_children_of(db_path: &str, path: &str) -> String {
                     seen.insert(unique_tag_id, true);
                 }
             }
-            Err(e) => {
-                println!("Got error: {}", e);
-            }
+            Err(_) => {}
         }
 
         match statement.read::<String, _>("title") {
@@ -270,9 +268,7 @@ fn get_children_of(db_path: &str, path: &str) -> String {
                     seen.insert(unique_deadline_id, true);
                 }
             }
-            Err(e) => {
-                println!("Got error: {}", e);
-            }
+            Err(_) => {}
         }
 
         last_seen_file_id = file_id;
