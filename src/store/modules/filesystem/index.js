@@ -74,9 +74,6 @@ const filesystem = {
     async navigateTo({ commit, state, dispatch }, { dir, idx }) {
       if (dir.path == lastEleOf(state.paths).path) return;
 
-      // let dirChildren = await dispatch("fetchChildrenOf", dir);
-      // console.log(dirChildren);
-      console.log(idx);
       commit("setCurrentDir", dir);
       commit("addToPaths", dir);
       if (idx !== null) commit("truncatePaths", idx);

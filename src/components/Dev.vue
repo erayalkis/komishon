@@ -6,6 +6,8 @@
 
   <p v-if="chosenDir">You chose: {{ chosenDir }}</p>
   <div style="display: flex; margin-right: auto; margin-left: auto">
+    <!-- <div v-if="dir.tags">has tags</div> -->
+    <!-- <div v-if="dir.deadlines">has deadlines</div> -->
     <template v-for="(dir, idx) in paths">
       <a @click="goTo(dir, idx)"
         ><div>{{ dir.path }}/</div></a
@@ -16,6 +18,8 @@
     <div style="text-align: center">
       <div>
         <div>{{ child.id }} | {{ child.file_name }}</div>
+        <div>{{ child.tags }}</div>
+        <div>{{ child.deadlines }}</div>
         <div v-if="!child.is_dir">
           <a @click="addTag(child)">Add tag</a>
           <a @click="addDeadline(child)">Add deadline</a>
