@@ -370,6 +370,7 @@ fn update_file_deadline(db_path: &str, deadline: Deadline) {
 }
 
 fn main() {
+    println!("{}", tauri::api::path::data_dir().unwrap().display());
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet, 

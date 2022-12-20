@@ -12,6 +12,7 @@ import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
+import MainNav from "./components/MainNav/MainNav.vue";
 import Navbar from "./components/Nav/Navbar.vue";
 const { dispatch } = useStore();
 

@@ -4,7 +4,7 @@
       <a class="cursor-pointer" @click="goTo(dir, idx)">
         <div v-if="idx != paths.length - 1" class="flex">
           {{ dir.file_name }}
-          <p>></p>
+          <p class="px-2">></p>
         </div>
         <div v-else>{{ dir.file_name }}</div>
       </a>
