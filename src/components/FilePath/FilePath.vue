@@ -1,8 +1,12 @@
 <template>
   <div class="flex bg-gray-200">
     <template v-for="(dir, idx) in paths">
-      <a @click="goTo(dir, idx)">
-        <div>{{ dir.file_name }}</div>
+      <a class="cursor-pointer" @click="goTo(dir, idx)">
+        <div v-if="idx != paths.length - 1" class="flex">
+          {{ dir.file_name }}
+          <p>></p>
+        </div>
+        <div v-else>{{ dir.file_name }}</div>
       </a>
     </template>
   </div>

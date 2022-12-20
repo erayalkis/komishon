@@ -197,7 +197,7 @@ fn get_children_of(db_path: &str, path: &str) -> String {
     LEFT JOIN TAGS T ON F.ID == T.parent_id
     LEFT JOIN DEADLINES D ON F.ID == D.parent_id
     WHERE F.parent_path = ?
-    ORDER BY F.is_dir, F.ID;
+    ORDER BY F.is_dir DESC;
     ";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, path)).unwrap();

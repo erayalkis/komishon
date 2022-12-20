@@ -15,6 +15,9 @@
       "all": true,
       "fs": {
         "scope": ["$APPDATA/*", "$APPDATA"]
+      },
+      "shell": {
+        "all": true
       }
     },
     "bundle": {
