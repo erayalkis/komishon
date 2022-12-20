@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-400 h-screen w-screen flex">
     <Navbar />
-    <div class="w-8/12">
+    <div class="w-full">
       <router-view />
     </div>
   </div>

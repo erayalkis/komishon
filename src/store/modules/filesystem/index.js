@@ -11,7 +11,7 @@ const filesystem = {
     // Array of objects representing a directory, used to keep history of files being navigated
     paths: [
       {
-        file_name: "Home",
+        file_name: "Files",
         path: "/",
       },
     ],

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-3">
+  <div class="flex flex-wrap gap-5 overflow-y-scroll px-5 py-6">
     <template v-for="child in children">
       <File :data="child" />
     </template>
@@ -12,5 +12,4 @@ import File from "./File.vue";
 const { state } = useStore();
 
 const children = computed(() => state.files.children);
-// const paths = computed(() => state.files.paths);
 </script>
