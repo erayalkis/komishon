@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-56 bg-gray-300">
+  <div class="h-full w-56 bg-gray-300 text-center">
     <NavHeader />
   </div>
 </template>

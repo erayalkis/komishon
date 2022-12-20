@@ -66,10 +66,6 @@ async function selectFile() {
   chosenDir.value = chosenFile;
 }
 
-async function goTo(dir, idx = null) {
-  dispatch("navigateTo", { dir, idx });
-}
-
 async function addDeadline(dir, deadlineData) {
   const appDataPath = await appDataDir();
   deadlineData = {
