@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-wrap gap-5 overflow-y-auto px-5 py-6">
+  <div
+    class="flex flex-wrap gap-2 px-3 py-3 overflow-y-auto"
+    style="max-height: 94%"
+  >
     <template v-for="child in children">
       <File :data="child" />
     </template>

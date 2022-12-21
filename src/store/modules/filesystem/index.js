@@ -1,6 +1,7 @@
 import { lastEleOf } from "../../../helpers/array";
 import { invoke } from "@tauri-apps/api/tauri";
 import { appDataDir } from "@tauri-apps/api/path";
+import { open } from "@tauri-apps/api/dialog";
 
 const filesystem = {
   state: () => ({
@@ -84,13 +85,12 @@ const filesystem = {
     async selectFolder() {
       const appDataPath = await appDataDir();
 
-      const dirSelect = open({
+      const dirSelect = await open({
         directory: true,
         multiple: false,
       });
 
-      console.log(dirSelect);
-      const testValue = await invoke("walk_and_save", {
+      await invoke("walk_and_save", {
         baseDir: dirSelect,
         to: `${appDataPath}/entries.db`,
       });
