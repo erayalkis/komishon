@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap gap-5 overflow-y-scroll px-5 py-6">
+  <div class="flex flex-wrap gap-5 overflow-y-auto px-5 py-6">
     <template v-for="child in children">
       <File :data="child" />
     </template>

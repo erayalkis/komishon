@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-400 h-screen w-screen flex">
+  <div class="bg-slate-400 h-full w-full min-h-screen flex">
     <Navbar />
     <div class="w-full">
       <router-view />
