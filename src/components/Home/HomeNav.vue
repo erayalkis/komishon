@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-fit w-full">
     <MainNav />
-    <div class="flex w-full bg-red-200 p-2 px-5">
+    <div class="flex w-full border-b border-gray-900 p-2 px-5">
       <FilePath />
       <div class="flex items-center ml-auto gap-5">
         <img

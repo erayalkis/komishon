@@ -1,5 +1,5 @@
 <template>
-  <div class="flex bg-gray-200">
+  <div class="flex">
     <template v-for="(dir, idx) in paths">
       <a class="cursor-pointer" @click="goTo(dir, idx)">
         <div v-if="idx != paths.length - 1" class="flex">
