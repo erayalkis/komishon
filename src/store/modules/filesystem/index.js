@@ -82,7 +82,7 @@ const filesystem = {
         ? await dispatch("loadInitialDirs")
         : await dispatch("fetchChildrenOf", dir);
     },
-    async selectFolder() {
+    async selectFolder({ state, dispatch }) {
       const appDataPath = await appDataDir();
 
       const dirSelect = await open({
@@ -94,6 +94,10 @@ const filesystem = {
         baseDir: dirSelect,
         to: `${appDataPath}/entries.db`,
       });
+
+      if (state.paths.length === 1) {
+        dispatch("loadInitialDirs");
+      }
     },
   },
   getters: {},
