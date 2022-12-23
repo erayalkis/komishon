@@ -1,8 +1,8 @@
 <template>
-  <div class="flex w-full border-b border-gray-900 p-2 px-5">
+  <div class="flex w-full border-b border-gray-900 p-3.5 px-5">
     <FilePath class="w-1/3" />
     <div class="relative mx-auto w-1/3 text-gray-900">
-      <input placeholder="search..." class="w-full rounded-md p-1 indent-10" />
+      <input placeholder="Search" class="w-full rounded-md p-1 indent-10" />
       <img :src="Search" class="w-5 h-5 absolute top-1.5 left-2" />
     </div>
 
