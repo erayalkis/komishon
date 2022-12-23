@@ -7,7 +7,7 @@
     <h1>Favorites</h1>
     <h1>Deadline Report</h1>
     <div class="mt-auto">
-      <h1>Made by</h1>
+      <h1>Komishon build v0.0.0</h1>
     </div>
   </div>
 </template>
