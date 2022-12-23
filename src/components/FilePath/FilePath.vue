@@ -1,12 +1,12 @@
 <template>
-  <div class="flex">
+  <div class="flex items-center">
     <template v-for="(dir, idx) in paths">
       <a class="cursor-pointer" @click="goTo(dir, idx)">
         <div v-if="idx != paths.length - 1" class="flex">
-          {{ dir.file_name }}
+          {{ getTruncFilenameIfTooLong(dir.file_name) }}
           <p class="px-2">></p>
         </div>
-        <div v-else>{{ dir.file_name }}</div>
+        <div v-else>{{ getTruncFilenameIfTooLong(dir.file_name) }}</div>
       </a>
     </template>
   </div>
@@ -19,5 +19,12 @@ const paths = computed(() => state.files.paths);
 
 function goTo(dir, idx = null) {
   dispatch("navigateTo", { dir, idx });
+}
+
+function getTruncFilenameIfTooLong(filename) {
+  if (filename.length > 8) {
+    return filename.slice(0, 6) + "...";
+  }
+  return filename;
 }
 </script>
