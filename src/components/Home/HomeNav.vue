@@ -3,10 +3,15 @@
     <MainNav />
     <div class="flex w-full bg-red-200 p-2 px-5">
       <FilePath />
-      <div class="flex items-center ml-auto gap-4">
-        <h1 @click="importFolder">Import</h1>
-        <h1>Table view</h1>
-        <h1>Box view</h1>
+      <div class="flex items-center ml-auto gap-5">
+        <img
+          @click="importFolder"
+          :src="Upload"
+          class="cursor-pointer w-5 h-5"
+          title="Import a file"
+        />
+        <img :src="List" class="w-5 h-5 cursor-pointer" title="List View" />
+        <img :src="Grid" class="w-5 h-5 cursor-pointer" title="Grid View" />
       </div>
     </div>
   </div>
@@ -15,6 +20,9 @@
 import { useStore } from "vuex";
 import FilePath from "..//FilePath/FilePath.vue";
 import MainNav from "../MainNav/MainNav.vue";
+import Upload from "@/assets/Upload.svg?url";
+import Grid from "@/assets/Grid.svg?url";
+import List from "@/assets/List.svg?url";
 const { dispatch } = useStore();
 
 async function importFolder() {
