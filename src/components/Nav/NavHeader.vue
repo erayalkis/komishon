@@ -1,3 +1,9 @@
 <template>
-  <h1 class="text-gray-900 p-3 text-center text-3xl">Komishon</h1>
+  <div class="flex items-center">
+    <img :src="Brush" class="w-8 h-8" />
+    <h1 class="text-gray-900 p-3 text-center text-3xl">Komishon</h1>
+  </div>
 </template>
+<script setup>
+import Brush from "@/assets/Brush.svg?url";
+</script>
