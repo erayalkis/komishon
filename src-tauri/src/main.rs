@@ -4,6 +4,9 @@
 )]
 
 mod models;
+use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline};
+use models::tag::{add_tag_to_file, remove_tag_from_file};
+use models::file::{get_base_dirs, get_children_of, walk_and_save, remove_invalid_files_from_db};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -33,9 +36,7 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet, 
-            return_map, 
             walk_and_save, 
-            read_all_from_db, 
             remove_invalid_files_from_db, 
             get_children_of, 
             get_base_dirs, 
