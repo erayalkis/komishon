@@ -2,15 +2,15 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Tag {
-    id: Option<i64>,
-    tag_name: String,
-    parent_path: String,
-    parent_id: i64,
-    color: String
+    pub id: Option<i64>,
+    pub tag_name: String,
+    pub parent_path: String,
+    pub parent_id: i64,
+    pub color: String
 }
 
 #[tauri::command]
-fn add_tag_to_file(db_path: &str, tag: Tag) {
+pub fn add_tag_to_file(db_path: &str, tag: Tag) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
@@ -30,7 +30,7 @@ fn add_tag_to_file(db_path: &str, tag: Tag) {
 }
 
 #[tauri::command]
-fn remove_tag_from_file(db_path: &str, tag: Tag) {
+pub fn remove_tag_from_file(db_path: &str, tag: Tag) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "DELETE FROM TAGS WHERE id == ?";
     let mut statement = conn.prepare(query).unwrap();

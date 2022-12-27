@@ -22,7 +22,7 @@ pub struct File {
 }
 
 #[tauri::command(async)]
-fn walk_and_save(base_dir: &str, to: &str) {
+pub fn walk_and_save(base_dir: &str, to: &str) {
     let conn = sqlite::open(to).expect("Error while accessing database");
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
@@ -59,7 +59,7 @@ fn walk_and_save(base_dir: &str, to: &str) {
 }
 
 #[tauri::command]
-fn get_base_dirs(db_path: &str) -> String {
+pub fn get_base_dirs(db_path: &str) -> String {
     let conn = sqlite::open(db_path).unwrap();
     let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
     let mut statement = conn.prepare(query).unwrap();
@@ -87,7 +87,7 @@ fn get_base_dirs(db_path: &str) -> String {
 }
 
 #[tauri::command]
-fn remove_invalid_files_from_db(db_path: &str) {
+pub fn remove_invalid_files_from_db(db_path: &str) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "SELECT * FROM FILES;";
     let mut statement = conn.prepare(query).unwrap();
@@ -117,7 +117,7 @@ fn remove_invalid_files_from_db(db_path: &str) {
 }
 
 #[tauri::command]
-fn get_children_of(db_path: &str, path: &str) -> String {
+pub fn get_children_of(db_path: &str, path: &str) -> String {
     let conn = sqlite::open(db_path).unwrap();
     let query = 
     "

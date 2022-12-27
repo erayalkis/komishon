@@ -2,15 +2,15 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Deadline {
-    id: Option<i64>,
-    title: String,
-    date: i64,
-    parent_path: String,
-    parent_id: i64
+    pub id: Option<i64>,
+    pub title: String,
+    pub date: i64,
+    pub parent_path: String,
+    pub parent_id: i64
 }
 
 #[tauri::command]
-fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
+pub fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "INSERT INTO DEADLINES(title, date, parent_path, parent_id) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
@@ -28,7 +28,7 @@ fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
 }
 
 #[tauri::command]
-fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
+pub fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "DELETE FROM DEADLINES WHERE id = ?";
     let mut statement = conn.prepare(query).unwrap();
@@ -43,7 +43,7 @@ fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
 }
 
 #[tauri::command]
-fn update_file_deadline(db_path: &str, deadline: Deadline) {
+pub fn update_file_deadline(db_path: &str, deadline: Deadline) {
     let conn = sqlite::open(db_path).unwrap();
     let query = "UPDATE DEADLINES SET title = ?, date = ? WHERE id = ?";
     let mut statement = conn.prepare(query).unwrap();
