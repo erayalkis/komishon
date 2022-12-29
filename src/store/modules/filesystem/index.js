@@ -51,7 +51,6 @@ const filesystem = {
       commit("setChildren", parsed);
     },
     async fetchChildrenOf({ commit }, dir) {
-      const appDataPath = await appDataDir();
       const basePath = dir.path;
 
       let res = await invoke("get_children_of", {
@@ -85,6 +84,27 @@ const filesystem = {
       if (state.paths.length === 1) {
         dispatch("loadInitialDirs");
       }
+    },
+    async returnToLastPath({ state, dispatch }) {
+      const paths = state.paths;
+      const lastPath = lastEleOf(paths);
+
+      await dispatch("fetchChildrenOf", lastPath);
+    },
+    async searchByName({ commit, dispatch }, input) {
+      if (input.trim() === "") {
+        dispatch("returnToLastPath");
+        return;
+      }
+
+      let res = await invoke("search_by_name", {
+        input,
+      });
+
+      let parsed = JSON.parse(res);
+      console.log(parsed);
+
+      commit("setChildren", parsed);
     },
   },
   getters: {},
