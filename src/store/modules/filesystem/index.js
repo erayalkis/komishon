@@ -87,9 +87,13 @@ const filesystem = {
     },
     async returnToLastPath({ state, dispatch }) {
       const paths = state.paths;
-      const lastPath = lastEleOf(paths);
+      if (paths.length > 1) {
+        const lastPath = lastEleOf(paths);
+        await dispatch("fetchChildrenOf", lastPath);
+        return;
+      }
 
-      await dispatch("fetchChildrenOf", lastPath);
+      await dispatch("fetchBaseDirs");
     },
     async searchByName({ commit, dispatch }, input) {
       if (input.trim() === "") {
