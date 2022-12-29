@@ -1,10 +1,12 @@
-pub fn database_path() -> &str {
+use std::path::PathBuf;
+
+pub fn database_path() -> PathBuf {
   let conf = tauri::Config::default();
-  tauri::api::path::app_data_dir(&conf);
+  return tauri::api::path::app_data_dir(&conf).unwrap();
 }
 
 #[tauri::command]
-fn create_db_if_not_exists(to: &str) {
+pub fn create_db_if_not_exists(to: &str) {
     let conn = sqlite::open(to).expect("Error while accessing database");
     let query = "
         PRAGMA journal_mode=WAL;
