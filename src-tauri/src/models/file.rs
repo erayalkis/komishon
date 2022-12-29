@@ -227,7 +227,9 @@ pub fn search_by_name(input: &str) -> String {
     ORDER BY F.is_dir DESC;
     ";
     let mut statement = conn.prepare(query).unwrap();
-    statement.bind((1, input)).unwrap();
+    let input_with_percentage_signs = format!("%{}%", input);
+    let parsed_input = input_with_percentage_signs.as_str();
+    statement.bind((1, parsed_input)).unwrap();
 
     let mut files: Vec<File> = Vec::new();
     let mut seen: HashMap<String, bool> = HashMap::new();
