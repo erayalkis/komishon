@@ -39,22 +39,13 @@ const filesystem = {
   },
   actions: {
     async loadInitialDirs({ commit }) {
-      // TODO: maybe load users last dir on the history after they close the app?
-      const appDataPath = await appDataDir();
-
-      let res = await invoke("get_base_dirs", {
-        dbPath: `${appDataPath}/entries.db`,
-      });
+      let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
       commit("setChildren", parsed);
     },
     async fetchBaseDirs({ commit }) {
-      const appDataPath = await appDataDir();
-
-      let res = await invoke("get_base_dirs", {
-        dbPath: `${appDataPath}/entries.db`,
-      });
+      let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
       commit("setChildren", parsed);
@@ -64,7 +55,6 @@ const filesystem = {
       const basePath = dir.path;
 
       let res = await invoke("get_children_of", {
-        dbPath: `${appDataPath}/entries.db`,
         path: basePath,
       });
 
@@ -83,8 +73,6 @@ const filesystem = {
         : await dispatch("fetchChildrenOf", dir);
     },
     async selectFolder({ state, dispatch }) {
-      const appDataPath = await appDataDir();
-
       const dirSelect = await open({
         directory: true,
         multiple: false,
@@ -92,7 +80,6 @@ const filesystem = {
 
       await invoke("walk_and_save", {
         baseDir: dirSelect,
-        to: `${appDataPath}/entries.db`,
       });
 
       if (state.paths.length === 1) {

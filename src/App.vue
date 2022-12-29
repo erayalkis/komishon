@@ -8,7 +8,6 @@
 </template>
 
 <script setup>
-import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
@@ -16,8 +15,7 @@ import Navbar from "./components/Nav/Navbar.vue";
 const { dispatch } = useStore();
 
 onBeforeMount(async () => {
-  const appData = await appDataDir();
-  await invoke("create_db_if_not_exists", { to: `${appData}/entries.db` });
+  await invoke("create_db_if_not_exists");
   await dispatch("loadInitialDirs");
 });
 </script>
