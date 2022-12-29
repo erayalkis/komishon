@@ -1,3 +1,4 @@
+use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
@@ -10,8 +11,8 @@ pub struct Tag {
 }
 
 #[tauri::command]
-pub fn add_tag_to_file(db_path: &str, tag: Tag) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn add_tag_to_file(tag: Tag) {
+    let conn = get_db();
     let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &tag.tag_name[..])).unwrap();
@@ -30,8 +31,8 @@ pub fn add_tag_to_file(db_path: &str, tag: Tag) {
 }
 
 #[tauri::command]
-pub fn remove_tag_from_file(db_path: &str, tag: Tag) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn remove_tag_from_file(tag: Tag) {
+    let conn = get_db();
     let query = "DELETE FROM TAGS WHERE id == ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, tag.id)).unwrap();

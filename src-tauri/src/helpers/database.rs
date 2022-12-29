@@ -1,8 +1,18 @@
 use std::path::PathBuf;
+use sqlite::Connection;
 
 pub fn database_path() -> PathBuf {
   let conf = tauri::Config::default();
-  return tauri::api::path::app_data_dir(&conf).unwrap();
+  let appdata_path = tauri::api::path::app_data_dir(&conf).unwrap();
+  let db_path = appdata_path.join("/entries.db");
+
+  return db_path;
+}
+
+pub fn get_db() -> Connection {
+  let db_path = database_path().display().to_string();
+  let conn = sqlite::open(db_path).unwrap();
+  return conn;
 }
 
 #[tauri::command]

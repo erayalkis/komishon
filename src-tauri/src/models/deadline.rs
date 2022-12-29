@@ -1,3 +1,4 @@
+use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
@@ -10,8 +11,8 @@ pub struct Deadline {
 }
 
 #[tauri::command]
-pub fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn add_deadline_to_file(deadline: Deadline) {
+    let conn = get_db();
     let query = "INSERT INTO DEADLINES(title, date, parent_path, parent_id) VALUES (?, ?, ?, ?)";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &deadline.title[..])).unwrap();
@@ -28,8 +29,8 @@ pub fn add_deadline_to_file(db_path: &str, deadline: Deadline) {
 }
 
 #[tauri::command]
-pub fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn remove_deadline_from_file(deadline: Deadline) {
+    let conn = get_db();
     let query = "DELETE FROM DEADLINES WHERE id = ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, deadline.id)).unwrap();
@@ -43,8 +44,8 @@ pub fn remove_deadline_from_file(db_path: &str, deadline: Deadline) {
 }
 
 #[tauri::command]
-pub fn update_file_deadline(db_path: &str, deadline: Deadline) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn update_file_deadline(deadline: Deadline) {
+    let conn = get_db();
     let query = "UPDATE DEADLINES SET title = ?, date = ? WHERE id = ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &deadline.title[..])).unwrap();

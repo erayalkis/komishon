@@ -1,6 +1,7 @@
 
 use crate::models::deadline::Deadline;
 use crate::models::tag::Tag;
+use crate::helpers::database::get_db;
 
 use std::{collections::HashMap, ffi::OsStr, path::Path};
 use sqlite::State;
@@ -22,8 +23,8 @@ pub struct File {
 }
 
 #[tauri::command(async)]
-pub fn walk_and_save(base_dir: &str, to: &str) {
-    let conn = sqlite::open(to).expect("Error while accessing database");
+pub fn walk_and_save(base_dir: &str) {
+    let conn = get_db();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
         let entry_path_str = entry.path().to_str().unwrap();
@@ -59,8 +60,8 @@ pub fn walk_and_save(base_dir: &str, to: &str) {
 }
 
 #[tauri::command]
-pub fn get_base_dirs(db_path: &str) -> String {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn get_base_dirs() -> String {
+    let conn = get_db();
     let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
     let mut statement = conn.prepare(query).unwrap();
 
@@ -87,8 +88,8 @@ pub fn get_base_dirs(db_path: &str) -> String {
 }
 
 #[tauri::command]
-pub fn remove_invalid_files_from_db(db_path: &str) {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn remove_invalid_files_from_db() {
+    let conn = get_db();
     let query = "SELECT * FROM FILES;";
     let mut statement = conn.prepare(query).unwrap();
 
@@ -117,8 +118,8 @@ pub fn remove_invalid_files_from_db(db_path: &str) {
 }
 
 #[tauri::command]
-pub fn get_children_of(db_path: &str, path: &str) -> String {
-    let conn = sqlite::open(db_path).unwrap();
+pub fn get_children_of(path: &str) -> String {
+    let conn = get_db();
     let query = 
     "
     SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.byte_size AS byte_size,
