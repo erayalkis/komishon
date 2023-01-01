@@ -26,6 +26,13 @@ const close = () => {
 };
 
 const open = (e) => {
+  const targetsComponent = e.path.some(
+    (p) =>
+      p.classList &&
+      (p.classList.contains("file") || p.classList.contains("folder"))
+  );
+  if (!targetsComponent) return;
+
   opened.value = true;
 
   nextTick(() => {
