@@ -9,13 +9,6 @@ use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_f
 use models::tag::{add_tag_to_file, remove_tag_from_file};
 use models::file::{get_base_dirs, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name};
 use helpers::database::create_db_if_not_exists;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
