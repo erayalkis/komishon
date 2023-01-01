@@ -1,12 +1,13 @@
 <template>
   <div
-    class="flex-col absolute bg-gray-200"
+    class="flex-col absolute bg-gray-200 z-50 w-32"
     v-if="opened"
     tabindex="-1"
     ref="menu"
     :style="{ top: top, left: left }"
+    @blur="close"
   >
-    <div>Item 1</div>
+    <div @click="close">Item 1</div>
     <div>Item 2</div>
     <div>Item 3</div>
   </div>
@@ -20,16 +21,19 @@ const left = ref("0px");
 const menu = ref(null);
 
 const close = () => {
+  console.log("close");
   opened.value = false;
 };
 
 const open = (e) => {
-  e.preventDefault();
   opened.value = true;
 
   nextTick(() => {
+    menu.value.focus();
     setMenu(e.y, e.x);
   });
+
+  e.preventDefault();
 };
 
 const setMenu = (eleTop, eleLeft) => {
