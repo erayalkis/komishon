@@ -118,6 +118,22 @@ pub fn remove_invalid_files_from_db() {
 }
 
 #[tauri::command]
+pub fn update_favorite_status (file: File, is_fav: i64) {
+    let conn = get_db();
+    let query = "UPDATE FILES SET favorited = ? WHERE ID = ?";
+    let mut statement = conn.prepare(query).unwrap();
+    statement.bind((1, file.id)).unwrap();
+    statement.bind((2, is_fav)).unwrap();
+
+    // TO DO: Return errors to frontend
+    match statement.next() {
+        Ok(_) => {}
+        
+        Err(_) => {}
+    }
+}
+
+#[tauri::command]
 pub fn get_children_of(path: &str) -> String {
     let conn = get_db();
     let query = 
