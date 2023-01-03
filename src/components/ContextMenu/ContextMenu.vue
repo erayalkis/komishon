@@ -1,14 +1,14 @@
 <template>
   <div
-    class="flex-col absolute bg-gray-200 z-50 w-32 outline-none"
+    class="flex-col absolute bg-gray-200 z-50 outline-none"
     v-if="opened"
     tabindex="-1"
     ref="menu"
     :style="{ top: top, left: left }"
     @blur="close"
   >
-    <FolderItems v-if="isFolder" />
-    <FileItems v-if="isFile" />
+    <FolderItems v-if="isFolder" :target-id="targetId" />
+    <FileItems v-if="isFile" :target-id="targetId" />
     <div>Test</div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import FolderItems from "./Items/FolderItems.vue";
 
 const isFile = ref(false);
 const isFolder = ref(false);
+const targetId = ref(null);
 const opened = ref(false);
 const top = ref("0px");
 const left = ref("0px");
@@ -29,15 +30,17 @@ const close = () => {
 };
 
 const open = (e) => {
-  const targetsFile = e.path.some((p) => p?.classList?.contains("file"));
-  const targetsFolder = e.path.some((p) => p?.classList?.contains("folder"));
+  const targetFile = e.path.find((p) => p?.classList?.contains("file"));
+  const targetFolder = e.path.find((p) => p?.classList?.contains("folder"));
 
-  if (!targetsFile && !targetsFolder) return;
+  if (!targetFile && !targetFolder) return;
 
-  isFile.value = targetsFile;
-  isFolder.value = targetsFolder;
+  const targetObj = targetFile || targetFolder;
+  isFile.value = targetFile != null || targetFile != undefined;
+  isFolder.value = targetFolder != null || targetFolder != undefined;
   opened.value = true;
 
+  targetId.value = targetObj.getAttribute("component-id");
   nextTick(() => {
     menu.value.focus();
     setMenu(e.y, e.x);
@@ -53,8 +56,6 @@ const setMenu = (eleTop, eleLeft) => {
   if (eleLeft > largestWidth) eleLeft = largestWidth;
   top.value = eleTop + "px";
   left.value = eleLeft + "px";
-
-  console.log(top.value, left.value);
 };
 
 defineExpose({
