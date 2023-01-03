@@ -1,4 +1,5 @@
 <template>
+  <!-- <TagModal /> -->
   <div
     class="flex-col absolute bg-gray-200 z-50 outline-none"
     v-if="opened"
@@ -7,19 +8,24 @@
     :style="{ top: top, left: left }"
     @blur="close"
   >
-    <FolderItems v-if="isFolder" :target-id="targetId" />
-    <FileItems v-if="isFile" :target-id="targetId" />
+    <FolderItems v-if="isFolder" :target-obj="targetObj" />
+    <FileItems v-if="isFile" :target-obj="targetObj" />
     <div>Test</div>
   </div>
 </template>
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, computed } from "vue";
 import FileItems from "./Items/FileItems.vue";
+import TagModal from "@/components/Modals/TagModal.vue";
 import FolderItems from "./Items/FolderItems.vue";
+import { useStore } from "vuex";
+
+const { getters } = useStore();
 
 const isFile = ref(false);
 const isFolder = ref(false);
 const targetId = ref(null);
+const targetObj = computed(() => getters.getFile(targetId.value));
 const opened = ref(false);
 const top = ref("0px");
 const left = ref("0px");
