@@ -1,5 +1,8 @@
 <template>
-  <div class="flex w-full border-b border-gray-900 p-3.5 px-5">
+  <div
+    class="flex w-full border-b border-gray-900 p-3.5 px-5"
+    style="max-height: 10%"
+  >
     <FilePath class="w-1/3" />
     <div class="relative mx-auto w-1/3 text-gray-900">
       <input

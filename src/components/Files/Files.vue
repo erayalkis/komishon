@@ -1,9 +1,9 @@
 <template>
   <div
     class="flex flex-wrap gap-2 px-3 py-3 overflow-y-auto"
-    style="max-height: 94%"
+    style="height: full"
   >
-    <template v-for="child in children">
+    <template v-for="child in children" :key="child.id">
       <File :data="child" />
     </template>
   </div>
