@@ -4,7 +4,6 @@ use sqlite::Connection;
 pub fn database_path() -> PathBuf {
   let conf = tauri::Config::default();
   let appdata_path = tauri::api::path::app_data_dir(&conf).unwrap();
-  println!("appdata_path: {}", appdata_path.display());
   let db_path = appdata_path.join("com.tauri.dev").join("entries.db");
 
   return db_path;
@@ -12,7 +11,6 @@ pub fn database_path() -> PathBuf {
 
 pub fn get_db() -> Connection {
   let db_path = database_path().display().to_string();
-  println!("{}", db_path);
   let conn = sqlite::open(db_path).unwrap();
   return conn;
 }
