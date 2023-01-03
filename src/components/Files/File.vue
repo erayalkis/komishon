@@ -1,6 +1,7 @@
 <template>
   <div
     :class="{ folder: data.is_dir, file: !data.is_dir }"
+    :component-id="data.id"
     class="w-32 h-32 flex items-center justify-center border border-black cursor-pointer rounded-md select-none text-center"
     @dblclick="goTo(data)"
   >
