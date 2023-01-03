@@ -1,38 +1,41 @@
 <template>
   <div
-    class="flex-col absolute bg-gray-200 z-50 w-32"
+    class="flex-col absolute bg-gray-200 z-50 w-32 outline-none"
     v-if="opened"
     tabindex="-1"
     ref="menu"
     :style="{ top: top, left: left }"
     @blur="close"
   >
-    <div @click="close">Item 1</div>
-    <div>Item 2</div>
-    <div>Item 3</div>
+    <FolderItems v-if="isFolder" />
+    <FileItems v-if="isFile" />
+    <div>Test</div>
   </div>
 </template>
 <script setup>
 import { ref, nextTick } from "vue";
+import FileItems from "./Items/FileItems.vue";
+import FolderItems from "./Items/FolderItems.vue";
 
+const isFile = ref(false);
+const isFolder = ref(false);
 const opened = ref(false);
 const top = ref("0px");
 const left = ref("0px");
 const menu = ref(null);
 
 const close = () => {
-  console.log("close");
   opened.value = false;
 };
 
 const open = (e) => {
-  const targetsComponent = e.path.some(
-    (p) =>
-      p.classList &&
-      (p.classList.contains("file") || p.classList.contains("folder"))
-  );
-  if (!targetsComponent) return;
+  const targetsFile = e.path.some((p) => p?.classList?.contains("file"));
+  const targetsFolder = e.path.some((p) => p?.classList?.contains("folder"));
 
+  if (!targetsFile && !targetsFolder) return;
+
+  isFile.value = targetsFile;
+  isFolder.value = targetsFolder;
   opened.value = true;
 
   nextTick(() => {
