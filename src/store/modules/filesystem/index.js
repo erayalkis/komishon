@@ -1,10 +1,9 @@
 import { lastEleOf } from "../../../helpers/array";
 import { invoke } from "@tauri-apps/api/tauri";
-import { appDataDir } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/api/dialog";
 
 const filesystem = {
-  state: () => ({
+  state: {
     // Current directory being displayed to the user
     currentDir: {},
     // Children of the current directory, can be files and folders
@@ -16,8 +15,12 @@ const filesystem = {
         path: "/",
       },
     ],
-  }),
-
+  },
+  getters: {
+    getFile: (state) => (id) => {
+      return state.children.find((folder) => folder.id == id);
+    },
+  },
   mutations: {
     setChildren(state, children) {
       state.children = children;
@@ -111,7 +114,6 @@ const filesystem = {
       commit("setChildren", parsed);
     },
   },
-  getters: {},
 };
 
 export default filesystem;
