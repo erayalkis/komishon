@@ -11,9 +11,9 @@ pub struct Tag {
 }
 
 #[tauri::command]
-pub fn add_tag_to_file(tag: Tag) {
+pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
     let conn = get_db();
-    let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?)";
+    let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?) RETURNING *";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &tag.tag_name[..])).unwrap();
     statement.bind((2, &tag.parent_path[..])).unwrap();
@@ -21,11 +21,20 @@ pub fn add_tag_to_file(tag: Tag) {
     statement.bind((4, &tag.color[..])).unwrap();
 
     match statement.next() {
-        Ok(_) => { 
-            println!("Added tag");
+        Ok(val) => {
+            let tag_with_id = Tag {
+                id: Some(statement.read::<i64, _>("ID").unwrap()),
+                tag_name: tag.tag_name,
+                parent_path: tag.parent_path,
+                parent_id: tag.parent_id,
+                color: tag.color
+            };
+
+            return Ok(tag_with_id);
         }
         Err(err) => {
             println!("Error while saving tag: {}", err);
+            return Err("Error while saving tag! :(");
         }
     }
 }

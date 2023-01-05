@@ -34,6 +34,14 @@ const filesystem = {
 
       paths.push(dir);
     },
+    addTagToFile(state, { id, tag }) {
+      const files = state.children;
+      const targetFile = files.find((file) => file.id === id);
+      targetFile.tags.push(tag);
+
+      state.children = files;
+      console.log(state.children);
+    },
     truncatePaths(state, idx) {
       const paths = state.paths;
       const trunc = paths.slice(0, idx + 1);

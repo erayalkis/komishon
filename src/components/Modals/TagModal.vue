@@ -48,6 +48,10 @@
 import BaseModal from "./ModalBase.vue";
 import X from "@/assets/X.svg";
 import { ref } from "vue";
+import { addTagToFile } from "@/api/tag/actions.js";
+import { useStore } from "vuex";
+
+const { commit } = useStore();
 
 const props = defineProps({
   targetObj: {
@@ -59,19 +63,21 @@ const props = defineProps({
 const emit = defineEmits(["closeTagModal"]);
 
 const name = ref("");
-const color = ref("");
+const color = ref("#000000");
 
-const saveTag = () => {
+const saveTag = async () => {
   if (!name.value) return;
 
-  const newTag = {
+  const tagData = {
     tag_name: name.value,
     parent_path: props.targetObj.path,
     parent_id: props.targetObj.id,
     color: color.value,
   };
 
-  console.log(newTag);
+  const tag = await addTagToFile(tagData);
+
+  commit("addTagToFile", { id: props.targetObj.id, tag });
   emit("closeTagModal");
 };
 </script>

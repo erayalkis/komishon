@@ -17,6 +17,8 @@ defineProps({
     default: () => {},
   },
 });
+
+defineEmits(["openModal"]);
 </script>
 <style>
 .tags-div {
