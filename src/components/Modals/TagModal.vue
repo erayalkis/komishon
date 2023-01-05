@@ -3,7 +3,11 @@
     <template #header>
       <div class="flex p-3 items-center justify-between">
         <h1 class="text-3xl text-gray-900">Add a tag</h1>
-        <p class="text-3xl mr-3" @click="$emit('closeTagModal')">X</p>
+        <img
+          :src="X"
+          class="mr-3 cursor-pointer"
+          @click="$emit('closeTagModal')"
+        />
       </div>
     </template>
     <template #body>
@@ -20,4 +24,5 @@
 </template>
 <script setup>
 import BaseModal from "./ModalBase.vue";
+import X from "@/assets/X.svg";
 </script>

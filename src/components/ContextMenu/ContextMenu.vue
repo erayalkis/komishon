@@ -1,20 +1,20 @@
 <template>
   <TagModal v-if="showTagModal" @close-tag-modal="closeTagModal" />
   <div
-    class="flex-col absolute bg-gray-200 z-50 outline-none"
+    class="flex-col absolute bg-gray-200 z-50 outline-none w-40"
     v-if="opened"
     tabindex="-1"
     ref="menu"
     :style="{ top: top, left: left }"
     @blur="close"
   >
+    <div>{{ truncateFilenameIfTooLong(targetObj.file_name) }}</div>
     <FolderItems v-if="isFolder" :target-obj="targetObj" />
     <FileItems
       v-if="isFile"
       :target-obj="targetObj"
       @open-tag-modal="openTagModal"
     />
-    <div>Test</div>
   </div>
 </template>
 <script setup>
@@ -82,4 +82,11 @@ const openTagModal = () => {
 const closeTagModal = () => {
   showTagModal.value = false;
 };
+
+function truncateFilenameIfTooLong(filename) {
+  if (filename.trim().length > 20) {
+    return filename.slice(0, 17) + "...";
+  }
+  return filename;
+}
 </script>

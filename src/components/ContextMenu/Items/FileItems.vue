@@ -1,9 +1,9 @@
 <template>
-  <div>{{ targetObj["file_name"] }}</div>
-  <div @click="$emit('openTagModal')">Add a tag</div>
+  <Tags :file="targetObj" @open-modal="$emit('openTagModal')" />
   <div>Add a deadline</div>
 </template>
 <script setup>
+import Tags from "./Tags.vue";
 const props = defineProps({
   targetObj: {
     type: Object,
