@@ -5,12 +5,22 @@
       <div class="flex">
         <div class="w-3 h-3" :style="{ backgroundColor: tag.color }"></div>
         <p>{{ tag.tag_name }}</p>
+        <img
+          @click="removeTag(file.id, tag)"
+          :src="X"
+          class="w-4 h-4 ml-auto mr-2"
+        />
       </div>
     </template>
     <p @click="$emit('openModal')">Add a tag +</p>
   </div>
 </template>
 <script setup>
+import X from "@/assets/X.svg";
+import { removeTagFromFile } from "@/api/tag/actions.js";
+import { useStore } from "vuex";
+const { commit } = useStore();
+
 defineProps({
   file: {
     type: Object,
@@ -19,6 +29,11 @@ defineProps({
 });
 
 defineEmits(["openModal"]);
+
+const removeTag = async (fileId, tag) => {
+  await removeTagFromFile(tag);
+  commit("removeTagFromFile", { id: fileId, tag });
+};
 </script>
 <style>
 .tags-div {

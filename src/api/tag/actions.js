@@ -7,7 +7,7 @@ export async function addTagToFile(tag) {
   return new_tag;
 }
 
-export function removeTagFromFile() {
+export function removeTagFromFile(tag) {
   if (!tag) return;
   invoke("remove_tag_from_file", { tag });
 }

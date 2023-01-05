@@ -40,7 +40,15 @@ const filesystem = {
       targetFile.tags.push(tag);
 
       state.children = files;
-      console.log(state.children);
+    },
+    removeTagFromFile(state, { id, tag }) {
+      const files = state.children;
+      const targetFile = files.find((file) => file.id === id);
+      targetFile.tags = targetFile.tags.filter(
+        (fileTag) => fileTag.id !== tag.id
+      );
+
+      state.children = files;
     },
     truncatePaths(state, idx) {
       const paths = state.paths;
