@@ -1,5 +1,9 @@
 <template>
-  <TagModal v-if="showTagModal" @close-tag-modal="closeTagModal" />
+  <TagModal
+    v-if="showTagModal"
+    @close-tag-modal="closeTagModal"
+    :target-obj="targetObj"
+  />
   <div
     class="flex-col absolute bg-gray-200 z-50 outline-none w-40"
     v-if="opened"

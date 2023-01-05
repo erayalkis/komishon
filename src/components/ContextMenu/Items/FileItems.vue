@@ -10,4 +10,5 @@ const props = defineProps({
     default: () => {},
   },
 });
+defineEmits(["openTagModal"]);
 </script>
