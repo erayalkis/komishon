@@ -21,7 +21,7 @@ pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
     statement.bind((4, &tag.color[..])).unwrap();
 
     match statement.next() {
-        Ok(val) => {
+        Ok(_) => {
             let tag_with_id = Tag {
                 id: Some(statement.read::<i64, _>("ID").unwrap()),
                 tag_name: tag.tag_name,
