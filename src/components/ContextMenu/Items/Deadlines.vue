@@ -1,19 +1,22 @@
 <template>
   <div>
-    <div class="tags-header">Deadlines</div>
-    <div class="absolute bg-gray-200 left-40 top-12 tags-div w-64">
-      <template v-for="deadline in file.deadlines">
-        <div class="flex items-center">
-          <p>{{ deadline.title }}</p>
-          <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
-          <img
-            @click="removeDeadline(file.id, deadline)"
-            :src="X"
-            class="w-4 h-4 ml-auto mr-2"
-          />
-        </div>
-      </template>
-      <p @click="$emit('openDeadlineModal')">Add a deadline +</p>
+    <div class="tags-header relative">
+      Deadlines
+
+      <div class="absolute bg-gray-200 left-40 top-0 tags-div w-64">
+        <template v-for="deadline in file.deadlines">
+          <div class="flex items-center">
+            <p>{{ deadline.title }}</p>
+            <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
+            <img
+              @click="removeDeadline(file.id, deadline)"
+              :src="X"
+              class="w-4 h-4 ml-auto mr-2"
+            />
+          </div>
+        </template>
+        <p @click="$emit('openDeadlineModal')">Add a deadline +</p>
+      </div>
     </div>
   </div>
 </template>
