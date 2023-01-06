@@ -17,6 +17,7 @@ pub struct File {
     parent_path: String,
     is_dir: i64,
     is_base_dir: i64,
+    favorited: i64,
     byte_size: i64,
     tags: Option<Vec<Tag>>,
     deadlines: Option<Vec<Deadline>>
@@ -75,6 +76,7 @@ pub fn get_base_dirs() -> String {
             parent_path: statement.read::<String, _>("parent_path").unwrap(),
             is_dir: statement.read::<i64, _>("is_dir").unwrap(),
             is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            favorited: statement.read::<i64, _>("favorited").unwrap(),
             byte_size: statement.read::<i64, _>("byte_size").unwrap(),
             tags: None,
             deadlines: None
@@ -122,8 +124,8 @@ pub fn update_favorite_status (file: File, is_fav: i64) {
     let conn = get_db();
     let query = "UPDATE FILES SET favorited = ? WHERE ID = ?";
     let mut statement = conn.prepare(query).unwrap();
-    statement.bind((1, file.id)).unwrap();
-    statement.bind((2, is_fav)).unwrap();
+    statement.bind((1, is_fav)).unwrap();
+    statement.bind((2, file.id)).unwrap();
 
     // TO DO: Return errors to frontend
     match statement.next() {
@@ -138,7 +140,7 @@ pub fn get_children_of(path: &str) -> String {
     let conn = get_db();
     let query = 
     "
-    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.byte_size AS byte_size,
+    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
     T.ID AS tag_id, T.tag_name AS tag_name, T.parent_path as tag_parent_path, T.parent_id AS tag_parent_id, T.color AS tag_color, 
     D.ID AS deadline_id, D.title AS title, D.date AS date, D.parent_path AS deadline_parent_path, D.parent_id AS deadline_parent_id
     FROM FILES F
@@ -167,6 +169,7 @@ pub fn get_children_of(path: &str) -> String {
                 parent_path: statement.read::<String, _>("file_parent_path").unwrap(),
                 is_dir: statement.read::<i64, _>("is_dir").unwrap(),
                 is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+                favorited: statement.read::<i64, _>("favorited").unwrap(),
                 byte_size: statement.read::<i64, _>("byte_size").unwrap(),
                 tags: Some(Vec::new()),
                 deadlines: Some(Vec::new())
@@ -233,7 +236,7 @@ pub fn search_by_name(input: &str) -> String {
     let conn = get_db();
     let query = 
     "
-    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.byte_size AS byte_size,
+    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
     T.ID AS tag_id, T.tag_name AS tag_name, T.parent_path as tag_parent_path, T.parent_id AS tag_parent_id, T.color AS tag_color, 
     D.ID AS deadline_id, D.title AS title, D.date AS date, D.parent_path AS deadline_parent_path, D.parent_id AS deadline_parent_id
     FROM FILES F
@@ -264,6 +267,7 @@ pub fn search_by_name(input: &str) -> String {
                 parent_path: statement.read::<String, _>("file_parent_path").unwrap(),
                 is_dir: statement.read::<i64, _>("is_dir").unwrap(),
                 is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+                favorited: statement.read::<i64, _>("favorited").unwrap(),
                 byte_size: statement.read::<i64, _>("byte_size").unwrap(),
                 tags: Some(Vec::new()),
                 deadlines: Some(Vec::new())

@@ -77,12 +77,14 @@ const filesystem = {
       let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
+      console.log(parsed);
       commit("setChildren", parsed);
     },
     async fetchBaseDirs({ commit }) {
       let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
+      console.log(parsed);
       commit("setChildren", parsed);
     },
     async fetchChildrenOf({ commit }, dir) {
@@ -144,6 +146,15 @@ const filesystem = {
       console.log(parsed);
 
       commit("setChildren", parsed);
+    },
+    async updateFileFavStatus({ state }, { file, isFav }) {
+      console.log(isFav);
+      console.log(file);
+      await invoke("update_favorite_status", { file, isFav });
+      // const children = state.children;
+      // const targetFile = children.find((child) => child.id === file.id);
+      // targetFile.favorited = true;
+      // state.children = children;
     },
   },
 };

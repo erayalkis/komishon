@@ -18,7 +18,11 @@
     @blur="close"
   >
     <div>{{ truncateFilenameIfTooLong(targetObj.file_name) }}</div>
+    <p @click="updateFileFav(targetObj)">
+      {{ targetObj.favorited ? "Unfavorite file" : "Favorite file" }}
+    </p>
     <FolderItems v-if="isFolder" :target-obj="targetObj" />
+
     <FileItems
       v-if="isFile"
       :target-obj="targetObj"
@@ -35,7 +39,7 @@ import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import FolderItems from "./Items/FolderItems.vue";
 import { useStore } from "vuex";
 
-const { getters } = useStore();
+const { getters, dispatch } = useStore();
 
 const isFile = ref(false);
 const isFolder = ref(false);
@@ -102,6 +106,13 @@ const openDeadlineModal = () => {
 
 const closeDeadlineModal = () => {
   showDeadlineModal.value = false;
+};
+
+const updateFileFav = async (targetObj) => {
+  await dispatch("updateFileFavStatus", {
+    file: targetObj,
+    isFav: targetObj.favorited == true ? 0 : 1,
+  });
 };
 
 function truncateFilenameIfTooLong(filename) {

@@ -11,6 +11,7 @@
       <h1>
         {{ truncateFilenameIfTooLong(data.file_name) }}
       </h1>
+      <p>{{ data.favorited }}</p>
     </div>
   </div>
 </template>
