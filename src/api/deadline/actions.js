@@ -1,8 +1,9 @@
 import { invoke } from "@tauri-apps/api";
 
-export function addDeadlineToFile(deadline) {
+export async function addDeadlineToFile(deadline) {
   if (!deadline) return;
-  invoke("add_deadline_to_file", { deadline });
+  const newDeadline = invoke("add_deadline_to_file", { deadline });
+  return newDeadline;
 }
 export function removeDeadlineFromFile(deadline) {
   if (!deadline) return;

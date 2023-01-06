@@ -3,7 +3,6 @@ import { invoke } from "@tauri-apps/api";
 export async function addTagToFile(tag) {
   if (!tag) return;
   const new_tag = await invoke("add_tag_to_file", { tag });
-  console.log(new_tag);
   return new_tag;
 }
 

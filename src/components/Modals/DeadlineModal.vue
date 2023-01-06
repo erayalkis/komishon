@@ -48,7 +48,7 @@
 import BaseModal from "./ModalBase.vue";
 import X from "@/assets/X.svg";
 import { ref } from "vue";
-import { addTagToFile } from "@/api/tag/actions.js";
+import { addDeadlineToFile } from "@/api/deadline/actions.js";
 import { useStore } from "vuex";
 
 const { commit } = useStore();
@@ -66,18 +66,24 @@ const name = ref("");
 const date = ref("");
 
 const saveDeadline = async () => {
-  if (!name.value) return;
+  if (!name.value || !date.value) return;
 
-  const tagData = {
-    tag_name: name.value,
+  const parsedDate = new Date(date.value);
+  const unixStamp = Math.floor(parsedDate.getTime() / 1000);
+
+  const deadlineData = {
+    title: name.value,
+    date: unixStamp,
     parent_path: props.targetObj.path,
     parent_id: props.targetObj.id,
-    color: color.value,
   };
 
-  const tag = await addTagToFile(tagData);
+  const deadline = await addDeadlineToFile(deadlineData);
 
-  commit("addDeadlineToFile", { id: props.targetObj.id, tag });
+  commit("addDeadlineToFile", {
+    id: props.targetObj.id,
+    deadline,
+  });
   emit("closeDeadlineModal");
 };
 </script>

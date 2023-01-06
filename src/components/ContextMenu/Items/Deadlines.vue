@@ -1,13 +1,12 @@
 <template>
   <div class="tags-header">Deadlines</div>
-  <div class="absolute bg-gray-200 left-40 top-12 tags-div w-44">
-    <template v-for="tag in file.deadlines">
+  <div class="absolute bg-gray-200 left-40 top-12 tags-div w-64">
+    <template v-for="deadline in file.deadlines">
       <div class="flex items-center">
-        <div class="w-3 h-3 mr-1" :style="{ backgroundColor: tag.color }"></div>
         <p>{{ deadline.title }}</p>
-        <p>{{ deadline.date }}</p>
+        <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
         <img
-          @click="removeTag(file.id, tag)"
+          @click="removeDeadline(file.id, deadline)"
           :src="X"
           class="w-4 h-4 ml-auto mr-2"
         />
@@ -18,7 +17,7 @@
 </template>
 <script setup>
 import X from "@/assets/X.svg";
-import { removeTagFromFile } from "@/api/tag/actions.js";
+import { removeDeadlineFromFile } from "@/api/deadline/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();
 
@@ -31,9 +30,9 @@ defineProps({
 
 defineEmits(["openModal"]);
 
-const removeTag = async (fileId, tag) => {
-  await removeTagFromFile(tag);
-  commit("removeTagFromFile", { id: fileId, tag });
+const removeDeadline = async (fileId, deadline) => {
+  await removeDeadlineFromFile(deadline);
+  commit("removeDeadlineFromFile", { id: fileId, deadline });
 };
 </script>
 <style>
