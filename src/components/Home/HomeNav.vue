@@ -20,8 +20,19 @@
         class="cursor-pointer w-5 h-5"
         title="Import a file"
       />
-      <img :src="List" class="w-5 h-5 cursor-pointer" title="List View" />
-      <img :src="Grid" class="w-5 h-5 cursor-pointer" title="Grid View" />
+      <img
+        :src="Grid"
+        class="w-5 h-5 cursor-pointer"
+        title="Grid View"
+        @click="setViewStyle('grid')"
+      />
+      <img
+        :src="List"
+        class="w-5 h-5 cursor-pointer"
+        title="List View"
+        @click="setViewStyle('list')"
+      />
+
       <img :src="Bell" class="w-5 h-5 cursor-pointer ml-4" />
     </div>
   </div>
@@ -34,15 +45,25 @@ import Upload from "@/assets/Upload.svg?url";
 import Grid from "@/assets/Grid.svg?url";
 import List from "@/assets/List.svg?url";
 import Bell from "@/assets/Bell.svg?url";
+import { ref } from "vue";
 
 const { dispatch } = useStore();
+const viewStyle = ref("grid");
 
 async function importFolder() {
   await dispatch("selectFolder");
+}
+
+async function setViewStyle(style) {
+  viewStyle.value = style;
 }
 
 async function search(v) {
   const input = v.target.value;
   await dispatch("searchByName", input);
 }
+
+defineExpose({
+  viewStyle,
+});
 </script>
