@@ -50,6 +50,22 @@ const filesystem = {
 
       state.children = files;
     },
+    addDeadlineToFile(state, { id, deadline }) {
+      const files = state.children;
+      const targetFile = files.find((file) => file.id === id);
+      targetFile.deadlines.push(deadline);
+
+      state.children = files;
+    },
+    removeTagFromFile(state, { id, deadline }) {
+      const files = state.children;
+      const targetFile = files.find((file) => file.id === id);
+      targetFile.tags = targetFile.deadlines.filter(
+        (fileTag) => fileTag.id !== deadline.id
+      );
+
+      state.children = files;
+    },
     truncatePaths(state, idx) {
       const paths = state.paths;
       const trunc = paths.slice(0, idx + 1);

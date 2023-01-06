@@ -1,8 +1,12 @@
 <template>
-  <Tags :file="targetObj" @open-modal="$emit('openTagModal')" />
-  <div>Add a deadline</div>
+  <Tags :file="targetObj" @open-tag-modal="$emit('openTagModal')" />
+  <Deadlines
+    :file="targetObj"
+    @open-deadline-modal="$emit('openDeadlineModal')"
+  />
 </template>
 <script setup>
+import Deadlines from "./Deadlines.vue";
 import Tags from "./Tags.vue";
 const props = defineProps({
   targetObj: {

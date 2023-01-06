@@ -4,6 +4,11 @@
     @close-tag-modal="closeTagModal"
     :target-obj="targetObj"
   />
+  <DeadlineModal
+    v-if="showDeadlineModal"
+    @close-deadline-modal="closeDeadlineModal"
+    :target-obj="targetObj"
+  />
   <div
     class="flex-col absolute bg-gray-200 z-50 outline-none w-40"
     v-if="opened"
@@ -18,6 +23,7 @@
       v-if="isFile"
       :target-obj="targetObj"
       @open-tag-modal="openTagModal"
+      @open-deadline-modal="openDeadlineModal"
     />
   </div>
 </template>
@@ -25,6 +31,7 @@
 import { ref, nextTick, computed } from "vue";
 import FileItems from "./Items/FileItems.vue";
 import TagModal from "@/components/Modals/TagModal.vue";
+import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import FolderItems from "./Items/FolderItems.vue";
 import { useStore } from "vuex";
 
@@ -39,6 +46,7 @@ const top = ref("0px");
 const left = ref("0px");
 const menu = ref(null);
 const showTagModal = ref(false);
+const showDeadlineModal = ref(false);
 
 const close = () => {
   opened.value = false;
@@ -85,6 +93,15 @@ const openTagModal = () => {
 
 const closeTagModal = () => {
   showTagModal.value = false;
+};
+
+const openDeadlineModal = () => {
+  opened.value = false;
+  showDeadlineModal.value = true;
+};
+
+const closeDeadlineModal = () => {
+  showDeadlineModal.value = false;
 };
 
 function truncateFilenameIfTooLong(filename) {

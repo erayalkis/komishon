@@ -11,9 +11,9 @@ pub struct Deadline {
 }
 
 #[tauri::command]
-pub fn add_deadline_to_file(deadline: Deadline) {
+pub fn add_deadline_to_file(deadline: Deadline) -> Result<Deadline, &'static str> {
     let conn = get_db();
-    let query = "INSERT INTO DEADLINES(title, date, parent_path, parent_id) VALUES (?, ?, ?, ?)";
+    let query = "INSERT INTO DEADLINES(title, date, parent_path, parent_id) VALUES (?, ?, ?, ?) RETURNING *";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &deadline.title[..])).unwrap();
     statement.bind((2, deadline.date)).unwrap();
@@ -21,9 +21,20 @@ pub fn add_deadline_to_file(deadline: Deadline) {
     statement.bind((4, deadline.parent_id)).unwrap();
 
     match statement.next() {
-        Ok(_) => {}
+        Ok(_) => {
+            let deadline_with_id = Deadline {
+                id: Some(statement.read::<i64, _>("ID").unwrap()),
+                title: deadline.title,
+                date: deadline.date,
+                parent_id: deadline.parent_id,
+                parent_path: deadline.parent_path
+            };
+
+            return Ok(deadline_with_id);
+        }
         Err(err) => {
-            println!("Error while deleting tag: {}", err);
+            println!("Error while saving deadline: {}", err);
+            return Err("Error while saving deadlines! :(");
         }
     }
 }
