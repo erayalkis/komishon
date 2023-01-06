@@ -148,13 +148,11 @@ const filesystem = {
       commit("setChildren", parsed);
     },
     async updateFileFavStatus({ state }, { file, isFav }) {
-      console.log(isFav);
-      console.log(file);
       await invoke("update_favorite_status", { file, isFav });
-      // const children = state.children;
-      // const targetFile = children.find((child) => child.id === file.id);
-      // targetFile.favorited = true;
-      // state.children = children;
+      const children = state.children;
+      const targetFile = children.find((child) => child.id === file.id);
+      targetFile.favorited = isFav;
+      state.children = children;
     },
   },
 };
