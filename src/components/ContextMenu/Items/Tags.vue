@@ -1,18 +1,23 @@
 <template>
-  <div class="tags-header">Tags</div>
-  <div class="absolute bg-gray-200 left-40 top-6 tags-div w-44">
-    <template v-for="tag in file.tags">
-      <div class="flex items-center">
-        <div class="w-3 h-3 mr-1" :style="{ backgroundColor: tag.color }"></div>
-        <p>{{ tag.tag_name }}</p>
-        <img
-          @click="removeTag(file.id, tag)"
-          :src="X"
-          class="w-4 h-4 ml-auto mr-2"
-        />
-      </div>
-    </template>
-    <p @click="$emit('openTagModal')">Add a tag +</p>
+  <div>
+    <div class="tags-header">Tags</div>
+    <div class="absolute bg-gray-200 left-40 top-6 tags-div w-44">
+      <template v-for="tag in file.tags">
+        <div class="flex items-center">
+          <div
+            class="w-3 h-3 mr-1"
+            :style="{ backgroundColor: tag.color }"
+          ></div>
+          <p>{{ tag.tag_name }}</p>
+          <img
+            @click="removeTag(file.id, tag)"
+            :src="X"
+            class="w-4 h-4 ml-auto mr-2"
+          />
+        </div>
+      </template>
+      <p @click="$emit('openTagModal')">Add a tag +</p>
+    </div>
   </div>
 </template>
 <script setup>
@@ -28,7 +33,7 @@ defineProps({
   },
 });
 
-defineEmits(["openModal"]);
+const emits = defineEmits(["openTagModal"]);
 
 const removeTag = async (fileId, tag) => {
   await removeTagFromFile(tag);
