@@ -6,7 +6,7 @@
     @dblclick="goTo(data)"
   >
     <svg
-      class="absolute file-heart"
+      class="absolute file-heart w-6 h-6"
       :class="{
         'file-heart': !data.favorited,
         'file-heart-fill': data.favorited,
@@ -20,7 +20,6 @@
       <h1>
         {{ truncateFilenameIfTooLong(data.file_name) }}
       </h1>
-      <p>{{ data.favorited }}</p>
     </div>
   </div>
 </template>
@@ -28,7 +27,6 @@
 import { useStore } from "vuex";
 import FolderRegular from "@/assets/FolderRegular.svg?url";
 import FileRegular from "@/assets/FileRegular.svg?url";
-import Heart from "@/assets/Heart.svg?url";
 import { openFileWithShell } from "@/api/shell/actions.js";
 const { dispatch } = useStore();
 
@@ -53,14 +51,14 @@ function truncateFilenameIfTooLong(filename) {
 </script>
 <style>
 .file-heart {
-  right: -270px;
+  right: 7px;
   top: -10px;
   fill: #94a3b8;
-  stroke: black;
+  stroke: rgb(48, 44, 44);
 }
 
 .file-heart-fill {
-  right: -270px;
+  right: 7px;
   top: -10px;
   fill: black;
   stroke: black;
