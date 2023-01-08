@@ -15,6 +15,7 @@ use helpers::database::create_db_if_not_exists;
 use crate::helpers::watcher::handle_watcher_event;
 
 fn main() {
+    create_db_if_not_exists();
     let files = base_dirs_vec();
     let mut watcher = recommended_watcher(|res| {
         match res {
