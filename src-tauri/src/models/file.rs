@@ -1,5 +1,5 @@
 
-use crate::models::deadline::Deadline;
+use crate::{models::deadline::Deadline, add_folder_to_watcher};
 use crate::models::tag::Tag;
 use crate::helpers::database::get_db;
 
@@ -48,6 +48,10 @@ pub fn walk_and_save(base_dir: &str) {
         query.bind((5, is_dir)).unwrap();
         query.bind((6, is_base_dir)).unwrap();
         query.bind((7, entry_metadata.len() as i64)).unwrap();
+
+        if is_base_dir == 1 {
+            add_folder_to_watcher(entry_path.as_path());
+        }
 
         match query.next() {
             Ok(_) => {

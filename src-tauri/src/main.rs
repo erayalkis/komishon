@@ -15,7 +15,6 @@ use models::file::{get_base_dirs, base_dirs_vec, get_children_of, walk_and_save,
 use helpers::database::create_db_if_not_exists;
 use crate::helpers::watcher::handle_watcher_event;
 
-
 pub static GLOBAL_WATCHER: Mutex<Option<ReadDirectoryChangesWatcher>> = Mutex::new(None); 
 
 fn create_watcher() -> ReadDirectoryChangesWatcher {
@@ -45,6 +44,15 @@ fn watch_base_dirs() {
         let path = Path::new(&file.path[..]);
         watcher.watch(path, notify::RecursiveMode::Recursive).unwrap();
     }
+}
+
+fn add_folder_to_watcher(path: &Path) {
+    println!("Adding path to watcher: {:?}", path);
+    let mut mutex_guard = GLOBAL_WATCHER.lock().unwrap();
+    let watcher = mutex_guard.as_mut().unwrap();
+
+    watcher.watch(path, notify::RecursiveMode::Recursive).unwrap();
+    println!("Added path to watcher");
 }
 
 fn main() {
