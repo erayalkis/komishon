@@ -14,7 +14,10 @@
     "allowlist": {
       "all": true,
       "fs": {
-        "scope": ["$APPDATA/*", "$APPDATA"]
+        "scope": [
+          "$APPDATA/*",
+          "$APPDATA"
+        ]
       },
       "shell": {
         "all": true

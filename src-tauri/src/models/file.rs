@@ -11,9 +11,9 @@ use serde::{Serialize, Deserialize};
 #[derive(Serialize, Deserialize)]
 pub struct File {
     id: i64,
-    file_name: String,
+    pub file_name: String,
     file_type: String,
-    path: String,
+    pub path: String,
     parent_path: String,
     is_dir: i64,
     is_base_dir: i64,
@@ -87,6 +87,33 @@ pub fn get_base_dirs() -> String {
     let serialized = serde_json::to_string(&files).unwrap();
 
     return serialized;
+}
+
+pub fn base_dirs_vec() -> Vec<File> {
+    let conn = get_db();
+    let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
+    let mut statement = conn.prepare(query).unwrap();
+
+    let mut files: Vec<File> = Vec::new();
+    while let Ok(State::Row) = statement.next() {
+        let file = File {
+            id: statement.read::<i64, _>("ID").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            favorited: statement.read::<i64, _>("favorited").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: None,
+            deadlines: None
+        };
+        files.push(file);
+    }
+
+
+    return files;
 }
 
 #[tauri::command]
