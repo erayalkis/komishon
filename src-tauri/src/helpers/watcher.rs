@@ -7,6 +7,7 @@ use crate::{helpers::file::add_new_watched_file};
 use super::database::get_db;
 
 pub fn handle_watcher_event(event: Event) {
+  let conn = get_db();
   println!("{:?}", event);
   match &event.kind {
     notify::EventKind::Any => {},
@@ -28,8 +29,17 @@ pub fn handle_watcher_event(event: Event) {
         notify::event::ModifyKind::Other => {}
     }
     },
-    notify::EventKind::Remove(val) => {
-      println!("{:?}", val);
+    notify::EventKind::Remove(_) => {
+      let query = "DELETE FROM FILES WHERE path = ?";
+      let mut statement = conn.prepare(query).unwrap();
+      statement.bind((1, event.paths[0].to_str().unwrap())).unwrap();
+
+      match statement.next() {
+        Ok(_) => {},
+        Err(err) => {
+          println!("Error while deleting file: {}", err);
+        }
+      }
     },
     notify::EventKind::Other => todo!(),
   }
