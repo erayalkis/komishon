@@ -147,7 +147,7 @@ pub fn remove_invalid_files_from_db() {
 }
 
 #[tauri::command]
-pub fn update_favorite_status (file: File, is_fav: i64) {
+pub fn update_favorite_status(file: File, is_fav: i64) {
     let conn = get_db();
     let query = "UPDATE FILES SET favorited = ? WHERE ID = ?";
     let mut statement = conn.prepare(query).unwrap();

@@ -22,6 +22,7 @@ const { dispatch } = useStore();
 
 onBeforeMount(async () => {
   await invoke("create_db_if_not_exists");
+  await invoke("watch_base_dirs");
   await dispatch("loadInitialDirs");
 });
 </script>
