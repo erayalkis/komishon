@@ -66,6 +66,26 @@ const filesystem = {
 
       state.children = files;
     },
+    removeFile(state, { id, path }) {
+      if (!id || !path) return;
+      // Use id when available, if not, use path
+      const main_identifier = id || path;
+      state.children = state.children.filter(
+        (file) => file.id !== main_identifier || file.path !== main_identifier
+      );
+    },
+    updateFile(state, { id, path, name }) {
+      console.log("Updating", id, path, name);
+
+      let children = state.children;
+      let target = state.children.find((file) => file.id === id);
+      console.log(target);
+      if (!target) return;
+
+      target.path = path;
+      target.file_name = name;
+      state.children = children;
+    },
     truncatePaths(state, idx) {
       const paths = state.paths;
       const trunc = paths.slice(0, idx + 1);

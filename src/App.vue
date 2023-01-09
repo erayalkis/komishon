@@ -13,35 +13,53 @@
 
 <script setup>
 import { invoke } from "@tauri-apps/api/tauri";
-import { onBeforeMount, onBeforeUnmount } from "vue";
+import { onBeforeMount, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
 import Navbar from "./components/Nav/Navbar.vue";
 import ContextMenu from "./components/ContextMenu/ContextMenu.vue";
 
-const { dispatch } = useStore();
+const { dispatch, commit } = useStore();
+
+const unlisteners = ref([]);
+
+const setupListeners = async () => {
+  const unlistenRename = await listen("file-rename", (event) => {
+    console.log(event);
+    const { id, name, path } = event.payload;
+    commit("updateFile", { id, name, path });
+  });
+  const unlistenRemove = await listen("file-remove", (event) => {
+    console.log(event);
+    const { path } = event.payload;
+    commit("removeFile", { path });
+  });
+  const unlistenCreate = await listen("file-create", (event) => {
+    console.log(event);
+  });
+
+  unlisteners.value.push(unlistenRename);
+  unlisteners.value.push(unlistenRemove);
+  unlisteners.value.push(unlistenCreate);
+};
 
 onBeforeMount(async () => {
   await invoke("create_db_if_not_exists");
   await invoke("watch_base_dirs");
+  await setupListeners();
+
   await dispatch("loadInitialDirs");
+});
 
-  const unlistenRename = listen("file-rename", (event) => {
-    console.log(event);
-  });
+onUnmounted(async () => {
+  console.log("unmount hit");
 
-  const unlistenRemove = listen("file-remove", (event) => {
-    console.log(event);
-  });
+  console.log(unlisteners.value);
 
-  const unlistenCreate = listen("file-create", (event) => {
-    console.log(event);
-  });
+  unlisteners.value.forEach((unlistener) => {
+    console.log(unlistener);
 
-  onBeforeUnmount(() => {
-    unlistenRename();
-    unlistenRemove();
-    unlistenCreate();
+    unlistener();
   });
 });
 </script>

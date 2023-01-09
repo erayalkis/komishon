@@ -43,7 +43,8 @@ pub fn add_new_watched_file(base_dir: &str) {
 
     let payload = EventPayload {
         id: None,
-        path: Some(base_dir)
+        path: Some(base_dir),
+        name: None
     };
 
     GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-create", payload).unwrap();
