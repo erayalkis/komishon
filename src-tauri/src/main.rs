@@ -13,9 +13,11 @@ use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_f
 use models::tag::{add_tag_to_file, remove_tag_from_file};
 use models::file::{get_base_dirs, base_dirs_vec, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name, update_favorite_status};
 use helpers::database::create_db_if_not_exists;
+use tauri::{Manager, Window};
 use crate::helpers::watcher::handle_watcher_event;
 
-pub static GLOBAL_WATCHER: Mutex<Option<ReadDirectoryChangesWatcher>> = Mutex::new(None); 
+pub static GLOBAL_WATCHER: Mutex<Option<ReadDirectoryChangesWatcher>> = Mutex::new(None);
+pub static GLOBAL_WINDOW: Mutex<Option<Window>> = Mutex::new(None);
 
 fn create_watcher() -> ReadDirectoryChangesWatcher {
     // Make this mutable again if errors start popping up (dont think its necessary tho)
@@ -56,9 +58,16 @@ fn add_folder_to_watcher(path: &Path) {
 }
 
 fn main() {
-    *GLOBAL_WATCHER.lock().unwrap() = Some(create_watcher());
 
     tauri::Builder::default()
+    .setup(|app| {
+
+        let main_window = app.get_window("main").unwrap();
+        *GLOBAL_WINDOW.lock().unwrap() = Some(main_window);
+        *GLOBAL_WATCHER.lock().unwrap() = Some(create_watcher());
+
+        Ok(())
+    })
     .invoke_handler(tauri::generate_handler![
         walk_and_save, 
         remove_invalid_files_from_db, 

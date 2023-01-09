@@ -2,6 +2,7 @@ use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct Deadline {
     pub id: Option<i64>,
     pub title: String,

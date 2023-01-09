@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use notify::{Event, event::RenameMode};
 
-use crate::{helpers::file::add_new_watched_file};
+use crate::{helpers::file::add_new_watched_file, GLOBAL_WINDOW, models::file::File};
 
 use super::database::get_db;
 
@@ -35,7 +35,23 @@ pub fn handle_watcher_event(event: Event) {
       statement.bind((1, event.paths[0].to_str().unwrap())).unwrap();
 
       match statement.next() {
-        Ok(_) => {},
+        Ok(_) => {
+          let file = File {
+            id: statement.read::<i64, _>("ID").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            favorited: statement.read::<i64, _>("favorited").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: None,
+            deadlines: None
+          };
+
+          GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-remove", file).unwrap();
+        },
         Err(err) => {
           println!("Error while deleting file: {}", err);
         }
@@ -50,7 +66,7 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
   match name_change_event {
     RenameMode::Any => todo!(),
     RenameMode::To => {
-      let target_file = "UPDATE FILES SET path = ?, file_name = ? WHERE ID = (SELECT ID FROM FILES WHERE file_name = \"WILL_UPDATE\")";
+      let target_file = "UPDATE FILES SET path = ?, file_name = ? WHERE ID = (SELECT ID FROM FILES WHERE file_name = \"WILL_UPDATE\") RETURNING *";
       let filename = path.file_name().unwrap().to_str().unwrap();
 
       let mut statement = conn.prepare(target_file).unwrap();
@@ -58,7 +74,23 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
       statement.bind((2, filename)).unwrap();
 
       match statement.next() {
-        Ok(_) => {},
+        Ok(_) => {
+          let file = File {
+            id: statement.read::<i64, _>("ID").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            favorited: statement.read::<i64, _>("favorited").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: None,
+            deadlines: None
+          };
+
+          GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-rename", file).unwrap();
+        },
         Err(err) => {
           println!("Error while renaming file from To call: {}", err);
         }
@@ -71,7 +103,8 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
       statement.bind((1, path.to_str().unwrap())).unwrap();
 
       match statement.next() {
-        Ok(_) => {},
+        Ok(_) => {
+        },
         Err(err) => {
           println!("Error while renaming file temporarily: {}", err);
         }

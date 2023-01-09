@@ -2,6 +2,7 @@ use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct Tag {
     pub id: Option<i64>,
     pub tag_name: String,

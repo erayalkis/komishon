@@ -9,18 +9,19 @@ use walkdir::WalkDir;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct File {
-    id: i64,
+    pub id: i64,
     pub file_name: String,
-    file_type: String,
+    pub file_type: String,
     pub path: String,
-    parent_path: String,
-    is_dir: i64,
-    is_base_dir: i64,
-    favorited: i64,
-    byte_size: i64,
-    tags: Option<Vec<Tag>>,
-    deadlines: Option<Vec<Deadline>>
+    pub parent_path: String,
+    pub is_dir: i64,
+    pub is_base_dir: i64,
+    pub favorited: i64,
+    pub byte_size: i64,
+    pub tags: Option<Vec<Tag>>,
+    pub deadlines: Option<Vec<Deadline>>
 }
 
 #[tauri::command(async)]
