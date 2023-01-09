@@ -11,7 +11,8 @@ use super::database::get_db;
 #[derive(Clone)]
 pub struct EventPayload<'a> {
   pub id: Option<i64>,
-  pub path: Option<&'a str>
+  pub path: Option<&'a str>,
+  pub name: Option<&'a str>
 }
 
 pub fn handle_watcher_event(event: Event) {
@@ -47,7 +48,8 @@ pub fn handle_watcher_event(event: Event) {
         Ok(_) => {
           let payload = EventPayload {
             id: None,
-            path: Some(path_str)
+            path: Some(path_str),
+            name: None
           };
 
           GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-remove", payload).unwrap();
@@ -77,7 +79,8 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
         Ok(_) => {
           let payload = EventPayload {
             id: Some(statement.read::<i64, _>("ID").unwrap()),
-            path: None
+            path: path.to_str(),
+            name: Some(filename)
           };
 
           GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-rename", payload).unwrap();
