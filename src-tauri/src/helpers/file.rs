@@ -1,6 +1,8 @@
 use std::ffi::OsStr;
 
-use super::database::get_db;
+use crate::GLOBAL_WINDOW;
+
+use super::{database::get_db, watcher::EventPayload};
 use walkdir::WalkDir;
 
 
@@ -38,4 +40,11 @@ pub fn add_new_watched_file(base_dir: &str) {
             }
         }
     }
+
+    let payload = EventPayload {
+        id: None,
+        path: Some(base_dir)
+    };
+
+    GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("file-create", payload).unwrap();
 }
