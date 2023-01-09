@@ -32,7 +32,7 @@ pub fn add_new_watched_file(base_dir: &str) {
         query.bind((7, entry_metadata.len() as i64)).unwrap();
 
         match query.next() {
-            Ok(val) => {
+            Ok(_) => {
                 if idx == 0 {
                     let file = File {
                         id: query.read::<i64, _>("ID").unwrap(),

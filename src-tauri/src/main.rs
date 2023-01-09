@@ -11,7 +11,7 @@ use std::sync::Mutex;
 use notify::{recommended_watcher, Watcher, ReadDirectoryChangesWatcher};
 use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline};
 use models::tag::{add_tag_to_file, remove_tag_from_file};
-use models::file::{get_base_dirs, base_dirs_vec, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name, update_favorite_status};
+use models::file::{get_base_dirs, base_dirs_vec, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name, update_favorite_status, fetch_files_with_deadlines};
 use helpers::database::create_db_if_not_exists;
 use tauri::{Manager, Window};
 use crate::helpers::watcher::handle_watcher_event;
@@ -79,7 +79,8 @@ fn main() {
         update_file_deadline,
         remove_deadline_from_file,
         update_favorite_status,
-        watch_base_dirs
+        watch_base_dirs,
+        fetch_files_with_deadlines
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
