@@ -1,5 +1,6 @@
 <template>
   <button @click="testFunc">HELP</button>
+  <button @click="testFunc2">HELP2</button>
   <HomeNav ref="homeNav" />
   <FilesList v-if="homeNav?.viewStyle === 'list'" />
   <Files v-else />
@@ -15,6 +16,11 @@ const homeNav = ref(null);
 
 const testFunc = async () => {
   const vals = await invoke("fetch_files_with_deadlines");
+  console.log(JSON.parse(vals));
+};
+
+const testFunc2 = async () => {
+  const vals = await invoke("fetch_favorited_files");
   console.log(JSON.parse(vals));
 };
 </script>
