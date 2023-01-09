@@ -66,13 +66,9 @@ const filesystem = {
 
       state.children = files;
     },
-    removeFile(state, { id, path }) {
-      if (!id || !path) return;
+    removeFile(state, { path }) {
       // Use id when available, if not, use path
-      const main_identifier = id || path;
-      state.children = state.children.filter(
-        (file) => file.id !== main_identifier || file.path !== main_identifier
-      );
+      state.children = state.children.filter((file) => file.path !== path);
     },
     updateFile(state, { id, path, name }) {
       console.log("Updating", id, path, name);

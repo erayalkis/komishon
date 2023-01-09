@@ -52,14 +52,6 @@ onBeforeMount(async () => {
 });
 
 onUnmounted(async () => {
-  console.log("unmount hit");
-
-  console.log(unlisteners.value);
-
-  unlisteners.value.forEach((unlistener) => {
-    console.log(unlistener);
-
-    unlistener();
-  });
+  unlisteners.value.forEach((unlistener) => unlistener());
 });
 </script>
