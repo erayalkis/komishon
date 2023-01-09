@@ -7,12 +7,12 @@ const routes = [
   {
     path: "/start",
     name: "Welcome",
-    component: () => import("@/components/Onboarding.vue"),
+    component: () => import("@/components/Onboarding/Onboarding.vue"),
   },
   {
-    path: "/files",
-    name: "Files",
-    component: () => import("@/components/Files.vue"),
+    path: "/favorites",
+    name: "Favorites",
+    component: () => import("@/components/Favorites/Favorites.vue"),
   },
   {
     path: "/dev",
