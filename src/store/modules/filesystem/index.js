@@ -34,6 +34,11 @@ const filesystem = {
 
       paths.push(dir);
     },
+    addFileToChildren(state, { file }) {
+      if (!file) return;
+      const currentPath = state.paths[state.paths.length - 1];
+      state.children.push(file);
+    },
     addTagToFile(state, { id, tag }) {
       const files = state.children;
       const targetFile = files.find((file) => file.id === id);
@@ -71,11 +76,8 @@ const filesystem = {
       state.children = state.children.filter((file) => file.path !== path);
     },
     updateFile(state, { id, path, name }) {
-      console.log("Updating", id, path, name);
-
       let children = state.children;
       let target = state.children.find((file) => file.id === id);
-      console.log(target);
       if (!target) return;
 
       target.path = path;
@@ -93,14 +95,12 @@ const filesystem = {
       let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
-      console.log(parsed);
       commit("setChildren", parsed);
     },
     async fetchBaseDirs({ commit }) {
       let res = await invoke("get_base_dirs");
 
       let parsed = JSON.parse(res);
-      console.log(parsed);
       commit("setChildren", parsed);
     },
     async fetchChildrenOf({ commit }, dir) {
@@ -111,7 +111,6 @@ const filesystem = {
       });
 
       let parsed = JSON.parse(res);
-      console.log(parsed);
       commit("setChildren", parsed);
     },
     async navigateTo({ commit, state, dispatch }, { dir, idx }) {
@@ -159,8 +158,6 @@ const filesystem = {
       });
 
       let parsed = JSON.parse(res);
-      console.log(parsed);
-
       commit("setChildren", parsed);
     },
     async updateFileFavStatus({ state }, { file, isFav }) {

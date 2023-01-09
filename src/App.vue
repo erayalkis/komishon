@@ -25,17 +25,15 @@ const unlisteners = ref([]);
 
 const setupListeners = async () => {
   const unlistenRename = await listen("file-rename", (event) => {
-    console.log(event);
     const { id, name, path } = event.payload;
     commit("updateFile", { id, name, path });
   });
   const unlistenRemove = await listen("file-remove", (event) => {
-    console.log(event);
     const { path } = event.payload;
     commit("removeFile", { path });
   });
   const unlistenCreate = await listen("file-create", (event) => {
-    console.log(event);
+    commit("addFileToChildren", { file: event.payload });
   });
 
   unlisteners.value.push(unlistenRename);

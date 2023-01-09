@@ -17,17 +17,13 @@ pub struct EventPayload<'a> {
 
 pub fn handle_watcher_event(event: Event) {
   let conn = get_db();
-  println!("{:?}", event);
   match &event.kind {
     notify::EventKind::Any => {},
     notify::EventKind::Access(_) => {},
-    notify::EventKind::Create(val) => {
-      println!("{:?}", &event.paths);
-      println!("{:?}", val);
+    notify::EventKind::Create(_) => {
       add_new_watched_file(&event.paths[0].to_str().unwrap())
     },
     notify::EventKind::Modify(val) => {
-      println!("{:?}", val);
       match val {
         notify::event::ModifyKind::Any => {},
         notify::event::ModifyKind::Data(_) => {},
@@ -91,7 +87,6 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
       }
     },
     RenameMode::From => {
-      println!("Received update from call for: {}", path.to_str().unwrap());
       let query = "UPDATE FILES SET file_name = \"WILL_UPDATE\" WHERE path = ?";
       let mut statement = conn.prepare(query).unwrap();
       statement.bind((1, path.to_str().unwrap())).unwrap();
@@ -105,7 +100,6 @@ pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) 
       }
     },
     RenameMode::Both => {
-      println!("both!")
     },
     RenameMode::Other => todo!(),
 }

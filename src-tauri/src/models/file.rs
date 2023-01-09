@@ -213,7 +213,6 @@ pub fn get_children_of(path: &str) -> String {
         let last_file = files.last_mut().unwrap();
         match statement.read::<String, _>("tag_name") {
             Ok(val) => {
-                println!("Got something: {}", val);
                 let tag_id = statement.read::<i64, _>("tag_id").unwrap();
                 let unique_tag_id = format!("{}-{}", tag_id, val);
 
@@ -311,7 +310,6 @@ pub fn search_by_name(input: &str) -> String {
         let last_file = files.last_mut().unwrap();
         match statement.read::<String, _>("tag_name") {
             Ok(val) => {
-                println!("Got something: {}", val);
                 let tag_id = statement.read::<i64, _>("tag_id").unwrap();
                 let unique_tag_id = format!("{}-{}", tag_id, val);
 

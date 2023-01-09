@@ -49,12 +49,10 @@ fn watch_base_dirs() {
 }
 
 fn add_folder_to_watcher(path: &Path) {
-    println!("Adding path to watcher: {:?}", path);
     let mut mutex_guard = GLOBAL_WATCHER.lock().unwrap();
     let watcher = mutex_guard.as_mut().unwrap();
 
     watcher.watch(path, notify::RecursiveMode::Recursive).unwrap();
-    println!("Added path to watcher");
 }
 
 fn main() {
