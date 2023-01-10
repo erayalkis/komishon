@@ -168,7 +168,8 @@ const filesystem = {
       state.children = children;
     },
     async fetchFavoritedFiles({ state, commit }) {
-      const files = await invoke("fetch_favorited_files");
+      const res = await invoke("fetch_favorited_files");
+      const files = JSON.parse(res);
       commit("setChildren", files);
     },
   },

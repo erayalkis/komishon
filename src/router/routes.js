@@ -1,8 +1,13 @@
+import store from "../store";
+
 const routes = [
   {
     path: "/",
     name: "Home",
     component: () => import("@/components/Home/Home.vue"),
+    beforeEnter: (to, from) => {
+      store.dispatch("loadInitialDirs");
+    },
   },
   {
     path: "/start",

@@ -14,6 +14,9 @@ const settings = {
     updateSettings({ state }, newState) {
       state = newState;
     },
+    setViewStyle({ state }, newStyle) {
+      state.preferredViewMode = newStyle;
+    },
   },
   actions: {
     loadSettings({ commit, dispatch }) {

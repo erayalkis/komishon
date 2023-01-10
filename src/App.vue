@@ -6,6 +6,7 @@
     <Navbar />
     <ContextMenu ref="menu" />
     <div class="w-full">
+      <HomeNav ref="homeNav" />
       <router-view />
     </div>
   </div>
@@ -18,8 +19,9 @@ import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
 import Navbar from "./components/Nav/Navbar.vue";
 import ContextMenu from "./components/ContextMenu/ContextMenu.vue";
+import HomeNav from "./components/Home/HomeNav.vue";
 
-const { dispatch, commit } = useStore();
+const { commit } = useStore();
 
 const unlisteners = ref([]);
 
@@ -45,8 +47,6 @@ onBeforeMount(async () => {
   await invoke("create_db_if_not_exists");
   await invoke("watch_base_dirs");
   await setupListeners();
-
-  await dispatch("loadInitialDirs");
 });
 
 onUnmounted(async () => {

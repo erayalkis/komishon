@@ -1,13 +1,14 @@
 <template>
-  <HomeNav ref="homeNav" />
-  <FilesList v-if="homeNav?.viewStyle === 'list'" />
+  {{ viewStyle }}
+  <FilesList v-if="$refs.homeNav?.viewStyle === 'list'" />
   <Files v-else />
 </template>
 <script setup>
-import { ref } from "vue";
 import Files from "../Files/Files.vue";
 import FilesList from "../Files/FilesList.vue";
-import HomeNav from "./HomeNav.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
+const { state } = useStore();
 
-const homeNav = ref(null);
+const viewStyle = computed(() => state);
 </script>
