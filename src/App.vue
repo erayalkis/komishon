@@ -21,7 +21,7 @@ import Navbar from "./components/Nav/Navbar.vue";
 import ContextMenu from "./components/ContextMenu/ContextMenu.vue";
 import HomeNav from "./components/Home/HomeNav.vue";
 
-const { commit } = useStore();
+const { commit, dispatch } = useStore();
 
 const unlisteners = ref([]);
 
@@ -47,6 +47,7 @@ onBeforeMount(async () => {
   await invoke("create_db_if_not_exists");
   await invoke("watch_base_dirs");
   await setupListeners();
+  dispatch("loadInitialDirs");
 });
 
 onUnmounted(async () => {

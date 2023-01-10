@@ -3,10 +3,10 @@ import store from "../store";
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "Files",
     component: () => import("@/components/Home/Home.vue"),
-    beforeEnter: (to, from) => {
-      store.dispatch("loadInitialDirs");
+    beforeEnter: (to) => {
+      store.dispatch("setRoutePath", to);
     },
   },
   {
@@ -18,6 +18,9 @@ const routes = [
     path: "/favorites",
     name: "Favorites",
     component: () => import("@/components/Favorites/Favorites.vue"),
+    beforeEnter: (to) => {
+      store.dispatch("setRoutePath", to);
+    },
   },
   {
     path: "/dev",

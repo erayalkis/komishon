@@ -25,6 +25,9 @@ const filesystem = {
     setChildren(state, children) {
       state.children = children;
     },
+    setBasePath(state, newBase) {
+      state.paths[0] = newBase;
+    },
     setCurrentDir(state, dir) {
       state.currentDir = dir;
     },
@@ -36,7 +39,6 @@ const filesystem = {
     },
     addFileToChildren(state, { file }) {
       if (!file) return;
-      const currentPath = state.paths[state.paths.length - 1];
       state.children.push(file);
     },
     addTagToFile(state, { id, tag }) {
@@ -86,6 +88,8 @@ const filesystem = {
     },
     truncatePaths(state, idx) {
       const paths = state.paths;
+      if (paths.length === 1) return;
+
       const trunc = paths.slice(0, idx + 1);
       state.paths = trunc;
     },
@@ -119,9 +123,11 @@ const filesystem = {
       commit("setCurrentDir", dir);
       commit("addToPaths", dir);
       if (idx !== null) commit("truncatePaths", idx);
-      dir.path == "/"
-        ? await dispatch("loadInitialDirs")
-        : await dispatch("fetchChildrenOf", dir);
+
+      dispatch("fetchDirsAccordingToPath", dir);
+      // dir.path == "/"
+      //   ? await dispatch("loadInitialDirs")
+      //   : await dispatch("fetchChildrenOf", dir);
     },
     async selectFolder({ state, dispatch }) {
       const dirSelect = await open({
@@ -168,9 +174,30 @@ const filesystem = {
       state.children = children;
     },
     async fetchFavoritedFiles({ state, commit }) {
+      console.log("hi");
       const res = await invoke("fetch_favorited_files");
       const files = JSON.parse(res);
       commit("setChildren", files);
+    },
+    setRoutePath({ commit }, to) {
+      commit("truncatePaths", 0);
+      commit("setBasePath", {
+        file_name: to.name,
+        path: to.path,
+      });
+    },
+    fetchDirsAccordingToPath({ dispatch }, dir) {
+      switch (dir.path) {
+        case "/":
+          dispatch("loadInitialDirs");
+          break;
+        case "/favorites":
+          console.log("hit");
+          dispatch("fetchFavoritedFiles");
+          break;
+        default:
+          dispatch("fetchChildrenOf", dir);
+      }
     },
   },
 };
