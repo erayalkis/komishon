@@ -45,25 +45,19 @@ import Upload from "@/assets/Upload.svg?url";
 import Grid from "@/assets/Grid.svg?url";
 import List from "@/assets/List.svg?url";
 import Bell from "@/assets/Bell.svg?url";
-import { ref } from "vue";
 
-const { dispatch } = useStore();
-const viewStyle = ref("grid");
+const { dispatch, commit } = useStore();
 
 async function importFolder() {
   await dispatch("selectFolder");
 }
 
 async function setViewStyle(style) {
-  viewStyle.value = style;
+  commit("setViewStyle", style);
 }
 
 async function search(v) {
   const input = v.target.value;
   await dispatch("searchByName", input);
 }
-
-defineExpose({
-  viewStyle,
-});
 </script>

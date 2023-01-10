@@ -1,6 +1,5 @@
 <template>
-  {{ viewStyle }}
-  <FilesList v-if="$refs.homeNav?.viewStyle === 'list'" />
+  <FilesList v-if="viewStyle === 'list'" />
   <Files v-else />
 </template>
 <script setup>
@@ -10,5 +9,5 @@ import { useStore } from "vuex";
 import { computed } from "vue";
 const { state } = useStore();
 
-const viewStyle = computed(() => state);
+const viewStyle = computed(() => state.settings.preferredViewMode);
 </script>

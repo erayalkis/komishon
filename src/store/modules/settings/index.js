@@ -1,35 +1,36 @@
 import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { appDataDir } from "@tauri-apps/api/path";
 
-const defaults = {
-  preferredViewMode: "grid",
-};
-
 const settings = {
   state: {
-    preferredViewMode: null,
+    preferredViewMode: "grid",
   },
   getters: {},
   mutations: {
-    updateSettings({ state }, newState) {
-      state = newState;
+    updateSettings(state, newData) {
+      state.preferredViewMode = newData.preferredViewMode;
     },
-    setViewStyle({ state }, newStyle) {
+    setViewStyle(state, newStyle) {
       state.preferredViewMode = newStyle;
     },
   },
   actions: {
-    loadSettings({ commit, dispatch }) {
+    async loadSettings({ commit, dispatch }) {
       try {
-        const data = readTextFile(`${appDataDir}/settings/userSettings.json`);
-        commit("updateSettings", data);
+        const data = await readTextFile(
+          `${await appDataDir()}/userSettings.json`
+        );
+        commit("updateSettings", JSON.parse(data));
       } catch (e) {
-        commit("updateSettings", defaults);
+        console.log("caught", e);
         dispatch("saveSettings");
       }
     },
-    saveSettings({ state }) {
-      writeTextFile(`${appDataDir}/settings/userSettings.json`, state);
+    async saveSettings({ state }) {
+      await writeTextFile(
+        `${await appDataDir()}/userSettings.json`,
+        JSON.stringify(state)
+      );
     },
   },
 };

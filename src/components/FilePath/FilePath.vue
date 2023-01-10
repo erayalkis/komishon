@@ -22,8 +22,8 @@ function goTo(dir, idx = null) {
 }
 
 function getTruncFilenameIfTooLong(filename) {
-  if (filename.length > 8) {
-    return filename.slice(0, 6) + "...";
+  if (filename.length > 10) {
+    return filename.slice(0, 7) + "...";
   }
   return filename;
 }
