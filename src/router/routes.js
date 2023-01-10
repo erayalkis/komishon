@@ -6,6 +6,7 @@ const routes = [
     name: "Files",
     component: () => import("@/components/Home/Home.vue"),
     beforeEnter: (to) => {
+      store.dispatch("loadInitialDirs");
       store.dispatch("setRoutePath", to);
     },
   },
