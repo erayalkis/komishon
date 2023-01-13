@@ -174,7 +174,6 @@ const filesystem = {
       state.children = children;
     },
     async fetchFavoritedFiles({ state, commit }) {
-      console.log("hi");
       const res = await invoke("fetch_favorited_files");
       const files = JSON.parse(res);
       commit("setChildren", files);
@@ -185,6 +184,11 @@ const filesystem = {
         file_name: to.name,
         path: to.path,
       });
+    },
+    async fetchDeadlinedFiles({ state, commit }) {
+      const res = await invoke("fetch_files_with_deadlines");
+      const files = JSON.parse(res);
+      commit("setChildren", files);
     },
     fetchDirsAccordingToPath({ dispatch }, dir) {
       switch (dir.path) {
