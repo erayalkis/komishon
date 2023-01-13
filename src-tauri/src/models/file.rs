@@ -363,90 +363,37 @@ pub fn fetch_files_with_deadlines() -> String {
     let conn = get_db();
     let query = 
     "
-    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
-    T.ID AS tag_id, T.tag_name AS tag_name, T.parent_path as tag_parent_path, T.parent_id AS tag_parent_id, T.color AS tag_color, 
-    D.ID AS deadline_id, D.title AS title, D.date AS date, D.parent_path AS deadline_parent_path, D.parent_id AS deadline_parent_id
-    FROM FILES F
-    LEFT JOIN TAGS T ON F.ID == T.parent_id
-    LEFT JOIN DEADLINES D ON F.ID == D.parent_id
-    WHERE EXISTS( SELECT * FROM DEADLINES WHERE parent_id == F.ID)
-    ORDER BY D.date DESC;
+    SELECT *, F.ID as file_id, F.parent_path AS file_parent_path, D.ID as deadline_id, D.parent_path AS deadline_parent_path FROM DEADLINES D JOIN FILES F ON D.parent_id = F.ID ORDER BY D.date ASC;
     ";
     let mut statement = conn.prepare(query).unwrap();
 
-    let mut files: Vec<File> = Vec::new();
-    let mut seen: HashMap<String, bool> = HashMap::new();
-    let mut last_seen_file_id: i64 = 0;
+    let mut deadlines: HashMap<i64, Vec<File>> = HashMap::new();
 
     while let Ok(State::Row) = statement.next() {
-        let file_id = statement.read::<i64, _>("file_id").unwrap();
-        let same_file_as_last = file_id == last_seen_file_id;
+        let date = statement.read::<i64, _>("date").unwrap();
 
-        if !same_file_as_last {
-            let file = File {
-                id: file_id,
-                file_name: statement.read::<String, _>("file_name").unwrap(),
-                file_type: statement.read::<String, _>("file_type").unwrap(),
-                path: statement.read::<String, _>("file_path").unwrap(),
-                parent_path: statement.read::<String, _>("file_parent_path").unwrap(),
-                is_dir: statement.read::<i64, _>("is_dir").unwrap(),
-                is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
-                favorited: statement.read::<i64, _>("favorited").unwrap(),
-                byte_size: statement.read::<i64, _>("byte_size").unwrap(),
-                tags: Some(Vec::new()),
-                deadlines: Some(Vec::new())
-            };
-
-            files.push(file);
+        if !deadlines.contains_key(&date) {
+            deadlines.insert(date, Vec::new());
         }
 
-        let last_file = files.last_mut().unwrap();
-        match statement.read::<String, _>("tag_name") {
-            Ok(val) => {
-                let tag_id = statement.read::<i64, _>("tag_id").unwrap();
-                let unique_tag_id = format!("{}-{}", tag_id, val);
+        let file = File {
+            id: statement.read::<i64, _>("file_id").unwrap(),
+            file_name: statement.read::<String, _>("file_name").unwrap(),
+            file_type: statement.read::<String, _>("file_type").unwrap(),
+            path: statement.read::<String, _>("path").unwrap(),
+            parent_path: statement.read::<String, _>("file_parent_path").unwrap(),
+            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
+            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
+            favorited: statement.read::<i64, _>("favorited").unwrap(),
+            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
+            tags: Some(Vec::new()),
+            deadlines: Some(Vec::new())
+        };
 
-                if !seen.contains_key(&unique_tag_id) {
-                    let tag = Tag {
-                        id: Some(tag_id),
-                        tag_name: val,
-                        parent_path: statement.read::<String, _>("tag_parent_path").unwrap(),
-                        parent_id: statement.read::<i64, _>("tag_parent_id").unwrap(),
-                        color: statement.read::<String, _>("tag_color").unwrap(),
-                    };
-
-                    last_file.tags.as_mut().unwrap().push(tag);
-                    seen.insert(unique_tag_id, true);
-                }
-            }
-            Err(_) => {}
-        }
-
-        match statement.read::<String, _>("title") {
-            Ok(val) => {
-                let deadline_id = statement.read::<i64, _>("deadline_id").unwrap();
-                let unique_deadline_id = format!("{}-{}", deadline_id, val);
-
-                if !seen.contains_key(&unique_deadline_id) {
-                    let deadline = Deadline {
-                        id: Some(deadline_id),
-                        title: val,
-                        date: statement.read::<i64, _>("date").unwrap(),
-                        parent_path: statement.read::<String, _>("deadline_parent_path").unwrap(),
-                        parent_id: statement.read::<i64, _>("deadline_parent_id").unwrap(),
-                    };
-
-                    last_file.deadlines.as_mut().unwrap().push(deadline);
-                    seen.insert(unique_deadline_id, true);
-                }
-            }
-            Err(_) => {}
-        }
-
-        last_seen_file_id = file_id;
+        deadlines.get_mut(&date).unwrap().push(file);
     }
 
-    let serialized = serde_json::to_string(&files).unwrap();
+    let serialized = serde_json::to_string(&deadlines).unwrap();
 
     return serialized;
 }

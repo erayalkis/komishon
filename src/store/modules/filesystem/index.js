@@ -190,6 +190,25 @@ const filesystem = {
       const files = JSON.parse(res);
       commit("setChildren", files);
     },
+    getDeadlinesObject({ state }) {
+      console.log("hi");
+      const files = state.children;
+      const deadlinesObj = {};
+
+      files.forEach((file) => {
+        file.deadlines.forEach((deadline) => {
+          if (deadlinesObj[deadline.date] === undefined) {
+            console.log("adding");
+            deadlinesObj[deadline.date] = [];
+          }
+
+          deadlinesObj[deadline.date].push(file);
+        });
+      });
+
+      console.log(deadlinesObj);
+      return deadlinesObj;
+    },
     fetchDirsAccordingToPath({ dispatch }, dir) {
       switch (dir.path) {
         case "/":
