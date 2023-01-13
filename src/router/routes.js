@@ -24,6 +24,14 @@ const routes = [
     },
   },
   {
+    path: "/deadlines",
+    name: "Deadlines",
+    component: () => import("@/components/Deadlines/Deadlines.vue"),
+    beforEnter: (to) => {
+      store.dispatch("setRoutePath", to);
+    },
+  },
+  {
     path: "/dev",
     name: "Debug",
     component: () => import("@/components/Dev.vue"),

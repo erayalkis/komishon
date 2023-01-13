@@ -5,7 +5,7 @@
     <NavHeader />
     <h1><router-link to="/">Home</router-link></h1>
     <h1><router-link to="/favorites">Favorites</router-link></h1>
-    <h1>Deadline Report</h1>
+    <h1><router-link to="/deadlines">Deadline Report</router-link></h1>
     <div class="mt-auto">
       <h1>Komishon build v0.0.0</h1>
     </div>
