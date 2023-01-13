@@ -370,7 +370,7 @@ pub fn fetch_files_with_deadlines() -> String {
     LEFT JOIN TAGS T ON F.ID == T.parent_id
     LEFT JOIN DEADLINES D ON F.ID == D.parent_id
     WHERE EXISTS( SELECT * FROM DEADLINES WHERE parent_id == F.ID)
-    ORDER BY F.is_dir DESC;
+    ORDER BY D.date DESC;
     ";
     let mut statement = conn.prepare(query).unwrap();
 
