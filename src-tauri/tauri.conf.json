@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "komishon",
-    "version": "0.0.0"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -38,7 +38,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "komishon",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -66,8 +66,8 @@
       {
         "title": "komishon",
         "fullscreen": false,
-        "width": 800,
-        "height": 600,
+        "width": 1000,
+        "height": 500,
         "resizable": true
       }
     ]

@@ -31,11 +31,6 @@ const routes = [
       store.dispatch("setRoutePath", to);
     },
   },
-  {
-    path: "/dev",
-    name: "Debug",
-    component: () => import("@/components/Dev.vue"),
-  },
 ];
 
 export default routes;
