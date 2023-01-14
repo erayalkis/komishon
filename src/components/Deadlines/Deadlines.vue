@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto" style="height: 96%">
+  <div class="overflow-y-auto flex-col" style="height: 96%">
     <template v-for="(val, key) in deadlines">
       <h1 class="text-3xl text-gray-900 px-1">
         {{ new Date(key * 1000).toDateString() }}
