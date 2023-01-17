@@ -1,5 +1,5 @@
 use std::{path::PathBuf};
-use sqlite::{Connection, Bindable, Statement};
+use sqlite::{Connection, Statement};
 use std::sync::Mutex;
 
 pub static DB: Mutex<Option<Connection>> = Mutex::new(None);
@@ -26,7 +26,7 @@ fn connect_to_db() {
   *DB.lock().unwrap() = Some(conn);
 }
 
-pub fn get_statement_from_query<'a, T>(conn: &'a Connection, query: &'a str, bindings: Vec<(usize, T)>) -> Statement<'a> where T: Bindable + sqlite::BindableWithIndex{
+pub fn get_statement_from_query<'a, T>(conn: &'a Connection, query: &'a str, bindings: Vec<(usize, T)>) -> Statement<'a> where T: sqlite::BindableWithIndex{
   let mut statement = conn.prepare(query).unwrap();
 
   for binding in bindings {
