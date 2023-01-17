@@ -27,7 +27,7 @@ pub struct File {
 
 #[tauri::command(async)]
 pub fn walk_and_save(base_dir: &str) {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
         let entry_path_str = entry.path().to_str().unwrap();
@@ -68,7 +68,7 @@ pub fn walk_and_save(base_dir: &str) {
 
 #[tauri::command]
 pub fn get_base_dirs() -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
     let mut statement = conn.prepare(query).unwrap();
 
@@ -96,7 +96,7 @@ pub fn get_base_dirs() -> String {
 }
 
 pub fn base_dirs_vec() -> Vec<File> {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
     let mut statement = conn.prepare(query).unwrap();
 
@@ -124,7 +124,7 @@ pub fn base_dirs_vec() -> Vec<File> {
 
 #[tauri::command]
 pub fn remove_invalid_files_from_db() {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "SELECT * FROM FILES;";
     let mut statement = conn.prepare(query).unwrap();
 
@@ -154,7 +154,7 @@ pub fn remove_invalid_files_from_db() {
 
 #[tauri::command]
 pub fn update_favorite_status(file: File, is_fav: i64) {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "UPDATE FILES SET favorited = ? WHERE ID = ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, is_fav)).unwrap();
@@ -170,7 +170,7 @@ pub fn update_favorite_status(file: File, is_fav: i64) {
 
 #[tauri::command]
 pub fn get_children_of(path: &str) -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = 
     "
     SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
@@ -265,7 +265,7 @@ pub fn get_children_of(path: &str) -> String {
 // Remove all the duplicate code, make the query a parameter for a different function, make the code modular
 #[tauri::command]
 pub fn search_by_name(input: &str) -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = 
     "
     SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
@@ -361,7 +361,7 @@ pub fn search_by_name(input: &str) -> String {
 
 #[tauri::command]
 pub fn fetch_files_with_deadlines() -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = 
     "
     SELECT *, F.ID as file_id, F.parent_path AS file_parent_path, D.ID as deadline_id, D.parent_path AS deadline_parent_path FROM DEADLINES D JOIN FILES F ON D.parent_id = F.ID ORDER BY D.date ASC;
@@ -401,7 +401,7 @@ pub fn fetch_files_with_deadlines() -> String {
 
 #[tauri::command]
 pub fn fetch_favorited_files() -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = 
     "
     SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
@@ -494,7 +494,7 @@ pub fn fetch_favorited_files() -> String {
 
 #[tauri::command]
 pub fn fetch_single_file(id: i64) -> String {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = 
     "
     SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,

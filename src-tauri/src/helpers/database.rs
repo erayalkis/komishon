@@ -12,12 +12,12 @@ pub fn database_path() -> PathBuf {
   return db_path;
 }
 
-pub fn get_db() -> std::option::Option<&'static mut Connection> {
+pub fn get_db() -> std::option::Option<Connection> {
   if DB.lock().unwrap().is_none() {
     connect_to_db();
   }
 
-  return DB.lock().unwrap().as_mut();
+  return DB.lock().unwrap().take();
 }
 
 fn connect_to_db() {
@@ -26,8 +26,7 @@ fn connect_to_db() {
   *DB.lock().unwrap() = Some(conn);
 }
 
-pub fn get_statement_from_query<T>(query: &str, bindings: Vec<(usize, T)>) -> Statement where T: Bindable + sqlite::BindableWithIndex{
-  let conn = get_db().unwrap();
+pub fn get_statement_from_query<'a, T>(conn: &'a Connection, query: &'a str, bindings: Vec<(usize, T)>) -> Statement<'a> where T: Bindable + sqlite::BindableWithIndex{
   let mut statement = conn.prepare(query).unwrap();
 
   for binding in bindings {

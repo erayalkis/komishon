@@ -7,7 +7,7 @@ use walkdir::WalkDir;
 
 
 pub fn add_new_watched_file(base_dir: &str) {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
         let entry_path_str = entry.path().to_str().unwrap();
