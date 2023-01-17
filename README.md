@@ -127,6 +127,7 @@ _Below is an example of how you can instruct your audience on installing and set
 **Before v1.0:**
 
 - [ ] Add changelogs
+- [ ] Update search functions
 - [ ] Refactor code
 - [ ] Revamp frontend
 - [ ] Add notifications
