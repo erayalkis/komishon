@@ -1,5 +1,6 @@
 
-use crate::{models::deadline::Deadline, add_folder_to_watcher};
+use crate::watcher::add_folder_to_watcher;
+use crate::models::deadline::Deadline;
 use crate::models::tag::Tag;
 use crate::helpers::database::get_db;
 
