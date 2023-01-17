@@ -9,9 +9,6 @@ mod helpers;
 use std::path::Path;
 use std::sync::Mutex;
 use notify::recommended_watcher;
-#[cfg(target_os="macos")]
-use notify::WatcherKind::ReadDirectoryChangesWatcher;
-#[cfg(target_os="windows")]
 use notify::ReadDirectoryChangesWatcher;
 use notify::Watcher;
 use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline};
