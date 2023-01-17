@@ -1,5 +1,8 @@
-use std::path::PathBuf;
-use sqlite::Connection;
+use std::{path::PathBuf};
+use sqlite::{Connection, Bindable, Statement};
+use std::sync::Mutex;
+
+pub static DB: Mutex<Option<Connection>> = Mutex::new(None);
 
 pub fn database_path() -> PathBuf {
   let conf = tauri::Config::default();
@@ -9,15 +12,34 @@ pub fn database_path() -> PathBuf {
   return db_path;
 }
 
-pub fn get_db() -> Connection {
+pub fn get_db() -> std::option::Option<&'static mut Connection> {
+  if DB.lock().unwrap().is_none() {
+    connect_to_db();
+  }
+
+  return DB.lock().unwrap().as_mut();
+}
+
+fn connect_to_db() {
   let db_path = database_path().display().to_string();
   let conn = sqlite::open(db_path).unwrap();
-  return conn;
+  *DB.lock().unwrap() = Some(conn);
+}
+
+pub fn get_statement_from_query<T>(query: &str, bindings: Vec<(usize, T)>) -> Statement where T: Bindable + sqlite::BindableWithIndex{
+  let conn = get_db().unwrap();
+  let mut statement = conn.prepare(query).unwrap();
+
+  for binding in bindings {
+    statement.bind(binding).unwrap();
+  }
+
+  return statement;
 }
 
 #[tauri::command]
 pub fn create_db_if_not_exists() {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "
         PRAGMA journal_mode=WAL;
         PRAGMA foreign_keys=ON;
