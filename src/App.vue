@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-400 h-screen overflow-y-hidden flex">
+  <div class="bg-stone-50 h-screen overflow-y-hidden flex">
     <Navbar />
     <div class="w-full">
       <HomeNav ref="homeNav" />

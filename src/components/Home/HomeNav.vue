@@ -1,14 +1,14 @@
 <template>
   <div
-    class="flex w-full border-b border-gray-900 p-3.5 px-5"
+    class="flex w-full border-b border-gray-300 p-3.5 px-5"
     style="max-height: 10%"
   >
     <FilePath class="w-1/3" />
-    <div class="relative mx-auto w-1/3 text-gray-900">
+    <div class="relative mx-auto w-1/3 text-gray-800">
       <input
         @change="search"
         placeholder="Search"
-        class="w-full rounded-md p-1 indent-10"
+        class="w-full rounded-md p-1 indent-10 bg-gray-200"
       />
       <img :src="Search" class="w-5 h-5 absolute top-1.5 left-2" />
     </div>

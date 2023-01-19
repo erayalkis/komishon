@@ -11,12 +11,13 @@
         'file-heart': !data.favorited,
         'file-heart-fill': data.favorited,
       }"
+      @click="favoriteFile"
     >
       <use href="../../assets/Heart.svg#svgHeartEmpty"></use>
     </svg>
     <div class="flex flex-col items-center">
       <img v-if="data.is_dir" :src="FolderRegular" class="w-12 h-12" />
-      <img v-else :src="FileRegular" class="w-12 h-12" />
+      <img v-else :src="FileRegular" class="w-12 h-12 text-violet-500" />
       <h1>
         {{ truncateFilenameIfTooLong(data.file_name) }}
       </h1>
@@ -27,10 +28,11 @@
 import { useStore } from "vuex";
 import FolderRegular from "@/assets/FolderRegular.svg?url";
 import FileRegular from "@/assets/FileRegular.svg?url";
+import FileSvg from "@/assets/svgComponents/FileSvg.vue";
 import { openFileWithShell } from "@/api/shell/actions.js";
 const { dispatch } = useStore();
 
-defineProps({
+const props = defineProps({
   data: Object,
 });
 
@@ -41,6 +43,13 @@ function goTo(dir, idx = null) {
   }
   dispatch("navigateTo", { dir, idx });
 }
+
+const favoriteFile = () => {
+  dispatch("updateFileFavStatus", {
+    file: props.data,
+    isFav: props.data.favorited ? 0 : 1,
+  });
+};
 
 function truncateFilenameIfTooLong(filename) {
   if (filename.trim().length > 15) {
@@ -53,14 +62,14 @@ function truncateFilenameIfTooLong(filename) {
 .file-heart {
   right: 7px;
   top: -10px;
-  fill: #94a3b8;
+  fill: #fafaf9;
   stroke: rgb(48, 44, 44);
 }
 
 .file-heart-fill {
   right: 7px;
   top: -10px;
-  fill: black;
+  fill: #8b5cf6;
   stroke: black;
 }
 </style>
