@@ -125,9 +125,6 @@ const filesystem = {
       if (idx !== null) commit("truncatePaths", idx);
 
       dispatch("fetchDirsAccordingToPath", dir);
-      // dir.path == "/"
-      //   ? await dispatch("loadInitialDirs")
-      //   : await dispatch("fetchChildrenOf", dir);
     },
     async selectFolder({ state, dispatch }) {
       const dirSelect = await open({
@@ -190,24 +187,13 @@ const filesystem = {
       const files = JSON.parse(res);
       commit("setChildren", files);
     },
-    getDeadlinesObject({ state }) {
-      console.log("hi");
-      const files = state.children;
-      const deadlinesObj = {};
+    async fetchFileById(ctx, id) {
+      id = parseInt(id);
 
-      files.forEach((file) => {
-        file.deadlines.forEach((deadline) => {
-          if (deadlinesObj[deadline.date] === undefined) {
-            console.log("adding");
-            deadlinesObj[deadline.date] = [];
-          }
+      const res = await invoke("fetch_single_file", { id });
+      const file = JSON.parse(res);
 
-          deadlinesObj[deadline.date].push(file);
-        });
-      });
-
-      console.log(deadlinesObj);
-      return deadlinesObj;
+      return file[0];
     },
     fetchDirsAccordingToPath({ dispatch }, dir) {
       switch (dir.path) {
@@ -215,7 +201,6 @@ const filesystem = {
           dispatch("loadInitialDirs");
           break;
         case "/favorites":
-          console.log("hit");
           dispatch("fetchFavoritedFiles");
           break;
         default:

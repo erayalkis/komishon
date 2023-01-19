@@ -39,12 +39,12 @@ import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import FolderItems from "./Items/FolderItems.vue";
 import { useStore } from "vuex";
 
-const { getters, dispatch } = useStore();
+const { dispatch } = useStore();
 
 const isFile = ref(false);
 const isFolder = ref(false);
 const targetId = ref(null);
-const targetObj = computed(() => getters.getFile(targetId.value));
+const targetObj = ref({});
 const opened = ref(false);
 const top = ref("0px");
 const left = ref("0px");
@@ -56,18 +56,17 @@ const close = () => {
   opened.value = false;
 };
 
-const open = (e) => {
-  const targetFile = e.path.find((p) => p?.classList?.contains("file"));
-  const targetFolder = e.path.find((p) => p?.classList?.contains("folder"));
+const open = async (e, target) => {
+  if (!target) return;
+  const targetIsFolder = target.is_dir;
+  const targetIsFile = !target.is_dir;
+  if (!targetIsFile && !targetIsFolder) return;
 
-  if (!targetFile && !targetFolder) return;
-
-  const targetObj = targetFile || targetFolder;
-  isFile.value = targetFile != null || targetFile != undefined;
-  isFolder.value = targetFolder != null || targetFolder != undefined;
+  isFile.value = targetIsFile;
+  isFolder.value = targetIsFolder;
   opened.value = true;
+  targetObj.value = target;
 
-  targetId.value = targetObj.getAttribute("component-id");
   nextTick(() => {
     menu.value.focus();
     setMenu(e.y, e.x);
@@ -84,11 +83,6 @@ const setMenu = (eleTop, eleLeft) => {
   top.value = eleTop + "px";
   left.value = eleLeft + "px";
 };
-
-defineExpose({
-  close,
-  open,
-});
 
 const openTagModal = () => {
   opened.value = false;
@@ -116,9 +110,16 @@ const updateFileFav = async (targetObj) => {
 };
 
 function truncateFilenameIfTooLong(filename) {
+  if (!filename?.length) return;
+
   if (filename.trim().length > 20) {
     return filename.slice(0, 17) + "...";
   }
   return filename;
 }
+
+defineExpose({
+  close,
+  open,
+});
 </script>

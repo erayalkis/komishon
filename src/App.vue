@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="bg-slate-400 h-screen overflow-y-hidden flex"
-    @contextmenu.prevent="$refs.menu.open"
-  >
+  <div class="bg-slate-400 h-screen overflow-y-hidden flex">
     <Navbar />
-    <ContextMenu ref="menu" />
     <div class="w-full">
       <HomeNav ref="homeNav" />
       <router-view />
@@ -18,7 +14,6 @@ import { onBeforeMount, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
 import Navbar from "./components/Nav/Navbar.vue";
-import ContextMenu from "./components/ContextMenu/ContextMenu.vue";
 import HomeNav from "./components/Home/HomeNav.vue";
 
 const { commit, dispatch } = useStore();

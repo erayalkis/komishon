@@ -2,10 +2,10 @@
   <Files />
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import Files from "@/components/Files/Files.vue";
-const { dispatch } = useStore();
+const { state, dispatch } = useStore();
 
 onMounted(async () => {
   await dispatch("fetchFavoritedFiles");
