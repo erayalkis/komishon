@@ -2,12 +2,16 @@ use std::{path::PathBuf};
 use sqlite::{Connection, Statement};
 use std::sync::Mutex;
 
+use crate::GLOBAL_CONFIG;
+
 pub static DB: Mutex<Option<Connection>> = Mutex::new(None);
 
 pub fn database_path() -> PathBuf {
-  let conf = tauri::Config::default();
+  let mutex_binding = GLOBAL_CONFIG.lock().unwrap();
+  let conf = mutex_binding.as_ref().unwrap();
+
   let appdata_path = tauri::api::path::app_data_dir(&conf).unwrap();
-  let db_path = appdata_path.join("com.tauri.dev").join("entries.db");
+  let db_path = appdata_path.join("entries.db");
 
   return db_path;
 }
