@@ -2,7 +2,7 @@
   <ContextMenu ref="ctxMenu" />
   <div
     class="flex flex-wrap gap-2 px-3 py-3 overflow-y-auto"
-    style="height: full"
+    style="height: full; max-height: 96%"
   >
     <template v-if="files !== null" v-for="child in files" :key="child.id">
       <File

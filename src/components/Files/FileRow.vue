@@ -63,8 +63,18 @@ function truncateFilenameIfTooLong(filename) {
   stroke: rgb(48, 44, 44);
 }
 
+.file-heart:hover {
+  fill: #b595ff;
+  transition: 200ms ease-out fill;
+}
+
 .file-heart-fill {
   fill: #8b5cf6;
   stroke: black;
+}
+
+.file-heart-fill:hover {
+  fill: #6036c0;
+  transition: 200ms ease-out fill;
 }
 </style>

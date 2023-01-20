@@ -2,7 +2,7 @@
   <div
     :class="{ folder: data.is_dir, file: !data.is_dir }"
     :component-id="data.id"
-    class="w-32 h-32 flex items-center relative justify-center border border-black cursor-pointer rounded-md select-none text-center"
+    class="w-32 h-32 flex items-center relative justify-center border border-black cursor-pointer rounded-md select-none text-center hover:shadow-md transition duration-300 ease-out"
     @dblclick="goTo(data)"
   >
     <svg
@@ -66,10 +66,20 @@ function truncateFilenameIfTooLong(filename) {
   stroke: rgb(48, 44, 44);
 }
 
+.file-heart:hover {
+  fill: #b595ff;
+  transition: 200ms ease-out fill;
+}
+
 .file-heart-fill {
   right: 7px;
   top: -10px;
   fill: #8b5cf6;
   stroke: black;
+}
+
+.file-heart-fill:hover {
+  fill: #6036c0;
+  transition: 200ms ease-out fill;
 }
 </style>
