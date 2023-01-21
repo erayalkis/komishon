@@ -2,7 +2,7 @@
   <div
     :class="{ folder: data.is_dir, file: !data.is_dir }"
     :component-id="data.id"
-    class="w-32 h-32 flex items-center relative justify-center border border-black cursor-pointer rounded-md select-none text-center hover:shadow-md transition duration-300 ease-out"
+    class="w-40 h-40 bg-stone-50 border border-gray-300 flex items-center relative justify-center cursor-pointer rounded-md select-none text-center hover:shadow-md transition duration-300 ease-out"
     @dblclick="goTo(data)"
   >
     <svg
@@ -16,9 +16,9 @@
       <use href="../../assets/Heart.svg#svgHeartEmpty"></use>
     </svg>
     <div class="flex flex-col items-center">
-      <img v-if="data.is_dir" :src="FolderRegular" class="w-12 h-12" />
-      <img v-else :src="FileRegular" class="w-12 h-12 text-violet-500" />
-      <h1>
+      <img v-if="data.is_dir" :src="FolderRegular" class="w-14 h-14" />
+      <img v-else :src="FileRegular" class="w-14 h-14 text-violet-500" />
+      <h1 class="text-xl">
         {{ truncateFilenameIfTooLong(data.file_name) }}
       </h1>
     </div>
@@ -28,7 +28,6 @@
 import { useStore } from "vuex";
 import FolderRegular from "@/assets/FolderRegular.svg?url";
 import FileRegular from "@/assets/FileRegular.svg?url";
-import FileSvg from "@/assets/svgComponents/FileSvg.vue";
 import { openFileWithShell } from "@/api/shell/actions.js";
 const { dispatch } = useStore();
 

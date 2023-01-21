@@ -4,25 +4,29 @@
   >
     <NavHeader class="text-center p-3" />
     <router-link to="/">
-      <h1
-        class="text-xl text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
+      <div
+        class="flex items-center text-xl text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
       >
-        Home
-      </h1>
+        <img :src="Home" class="h-6 w-6 mr-1" />
+
+        <h1>Home</h1>
+      </div>
     </router-link>
     <router-link to="/favorites">
-      <h1
-        class="text-xl text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
+      <div
+        class="text-xl flex text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
       >
-        Favorites
-      </h1>
+        <img :src="Heart" class="h-6 w-6 mr-1" />
+        <h1>Favorites</h1>
+      </div>
     </router-link>
     <router-link to="/deadlines">
-      <h1
-        class="text-xl text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
+      <div
+        class="flex items-center text-xl text-gray-900 w-full px-2 py-1.5 hover:bg-violet-500 hover:text-white transition duration-200 ease-out cursor-pointer"
       >
-        Deadline Report
-      </h1>
+        <img :src="Calendar" class="h-6 w-6 mr-1" />
+        <h1>Deadline Report</h1>
+      </div>
     </router-link>
     <div class="mt-auto mx-auto italic opacity-25">
       <h1>Komishon build {{ tauriVersion }}</h1>
@@ -32,6 +36,9 @@
 </template>
 <script setup>
 import NavHeader from "./NavHeader.vue";
+import Calendar from "@/assets/Calendar.svg?url";
+import Home from "@/assets/Home.svg?url";
+import Heart from "@/assets/Heart.svg?url";
 import { getVersion } from "@tauri-apps/api/app";
 import { onMounted, ref } from "vue";
 
