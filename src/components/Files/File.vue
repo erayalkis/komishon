@@ -2,7 +2,7 @@
   <div
     :class="{ folder: data.is_dir, file: !data.is_dir }"
     :component-id="data.id"
-    class="w-40 h-40 bg-stone-50 border border-gray-300 flex items-center relative justify-center cursor-pointer rounded-md select-none text-center hover:shadow-md transition duration-300 ease-out"
+    class="w-40 h-40 bg-stone-50 border border-gray-300 flex items-center relative justify-center cursor-pointer rounded-md select-none text-center hover:shadow-lg transition duration-300 ease-out"
     @dblclick="goTo(data)"
   >
     <svg
