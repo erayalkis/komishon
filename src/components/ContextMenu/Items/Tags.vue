@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="tags-header relative">
+    <div
+      class="tags-header relative flex hover:bg-gray-100 transition duration-300 ease-out py-2 px-1 cursor-pointer"
+    >
+      <img :src="TagSvg" class="mr-2" />
       Tags
-
       <div class="absolute bg-gray-200 left-40 top-0 tags-div w-44">
         <template v-for="tag in file.tags">
           <div class="flex items-center">
@@ -25,6 +27,7 @@
 </template>
 <script setup>
 import X from "@/assets/X.svg";
+import TagSvg from "@/assets/Tag.svg";
 import { removeTagFromFile } from "@/api/tag/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();

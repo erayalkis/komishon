@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="tags-header relative">
+    <div
+      class="tags-header relative flex hover:bg-gray-100 transition duration-300 ease-out py-2 px-1 cursor-pointer"
+    >
+      <img :src="CalendarSvg" class="mr-2" />
       Deadlines
-
       <div class="absolute bg-gray-200 left-40 top-0 tags-div w-64">
         <template v-for="deadline in file.deadlines">
           <div class="flex items-center">
@@ -22,6 +24,7 @@
 </template>
 <script setup>
 import X from "@/assets/X.svg";
+import CalendarSvg from "@/assets/CalendarThin.svg";
 import { removeDeadlineFromFile } from "@/api/deadline/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();
