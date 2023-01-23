@@ -1,24 +1,36 @@
 <template>
   <div>
     <div
-      class="tags-header relative flex hover:bg-gray-100 transition duration-300 ease-out py-2 px-1 cursor-pointer"
+      class="deadlines-header relative flex hover:bg-gray-100 transition duration-300 ease-out py-2 px-1 cursor-pointer"
     >
       <img :src="CalendarSvg" class="mr-2" />
       Deadlines
-      <div class="absolute bg-gray-200 left-40 top-0 tags-div w-64">
-        <template v-for="deadline in file.deadlines">
-          <div class="flex items-center">
-            <p>{{ deadline.title }}</p>
-            <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
-            <img
-              @click="removeDeadline(file.id, deadline)"
-              :src="X"
-              class="w-4 h-4 ml-auto mr-2"
-            />
-          </div>
-        </template>
-        <p @click="$emit('openDeadlineModal')">Add a deadline +</p>
-      </div>
+    </div>
+    <div
+      class="absolute bg-neutral-50 deadlines-div w-80 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
+    >
+      <template v-if="file.deadlines.length == 0">
+        <h1>No deadlines available!</h1>
+      </template>
+      <template v-else v-for="deadline in file.deadlines">
+        <div
+          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out"
+        >
+          <p>{{ deadline.title }}</p>
+          <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
+          <img
+            @click="removeDeadline(file.id, deadline)"
+            :src="X"
+            class="w-4 h-4 ml-auto mr-2"
+          />
+        </div>
+      </template>
+      <p
+        @click="$emit('openDeadlineModal')"
+        class="hover:bg-gray-100 transition duration-300 ease-out"
+      >
+        Add a deadline +
+      </p>
     </div>
   </div>
 </template>
@@ -43,16 +55,23 @@ const removeDeadline = async (fileId, deadline) => {
   commit("removeDeadlineFromFile", { id: fileId, deadline });
 };
 </script>
-<style>
-.tags-div {
+<style scoped>
+.deadlines-div {
   display: none;
+  top: 80px;
+  left: 188px;
+  z-index: -1;
 }
 
-.tags-div:hover {
+.deadlines-div:hover {
   display: block;
 }
 
-.tags-header:hover + .tags-div {
+.deadlines-header:hover {
+  border-right-color: #fafafa;
+}
+
+.deadlines-header:hover + .deadlines-div {
   display: block;
 }
 </style>

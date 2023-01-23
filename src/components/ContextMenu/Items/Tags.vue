@@ -59,7 +59,7 @@ const removeTag = async (fileId, tag) => {
   commit("removeTagFromFile", { id: fileId, tag });
 };
 </script>
-<style>
+<style scoped>
 .tags-div {
   display: none;
   top: 38px;
@@ -73,7 +73,7 @@ const removeTag = async (fileId, tag) => {
 .tags-header:hover {
   border-right-color: #fafafa;
 }
-.tags-header:hover > .tags-div {
+.tags-header:hover + .tags-div {
   display: block;
 }
 </style>
