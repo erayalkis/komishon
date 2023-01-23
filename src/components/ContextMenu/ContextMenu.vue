@@ -10,7 +10,7 @@
     :target-obj="targetObj"
   />
   <div
-    class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-40"
+    class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-48"
     v-if="opened"
     tabindex="-1"
     ref="menu"
@@ -22,10 +22,11 @@
     </div> -->
 
     <div
-      class="flex cursor-pointer hover:bg-gray-100 transition duration-300 ease-out"
+      class="fav-item flex cursor-pointer hover:bg-gray-100 transition duration-300 ease-out py-2 px-1"
+      @click="updateFileFav"
     >
       <svg
-        class="file-heart w-6 h-6"
+        class="file-heart w-6 h-6 mr-2"
         :class="{
           'file-heart': !targetObj.favorited,
           'file-heart-fill': targetObj.favorited,
@@ -117,24 +118,26 @@ const closeDeadlineModal = () => {
   showDeadlineModal.value = false;
 };
 
-const updateFileFav = async (targetObj) => {
-  await dispatch("updateFileFavStatus", {
-    file: targetObj,
-    isFav: targetObj.favorited == true ? 0 : 1,
+const updateFileFav = async () => {
+  dispatch("updateFileFavStatus", {
+    file: targetObj.value,
+    isFav: targetObj.value.favorited ? 0 : 1,
   });
 };
-
-function truncateFilenameIfTooLong(filename) {
-  if (!filename?.length) return;
-
-  if (filename.trim().length > 20) {
-    return filename.slice(0, 17) + "...";
-  }
-  return filename;
-}
 
 defineExpose({
   close,
   open,
 });
 </script>
+<style scope>
+.fav-item:hover .file-heart {
+  fill: #b595ff;
+  transition: 200ms ease-out fill;
+}
+
+.fav-item:hover .file-heart-fill {
+  fill: #6036c0;
+  transition: 200ms ease-out fill;
+}
+</style>
