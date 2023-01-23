@@ -10,17 +10,33 @@
     :target-obj="targetObj"
   />
   <div
-    class="flex-col absolute bg-gray-200 z-50 outline-none w-40"
+    class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-40"
     v-if="opened"
     tabindex="-1"
     ref="menu"
     :style="{ top: top, left: left }"
     @blur="close"
   >
-    <div>{{ truncateFilenameIfTooLong(targetObj.file_name) }}</div>
-    <p @click="updateFileFav(targetObj)">
-      {{ targetObj.favorited ? "Unfavorite file" : "Favorite file" }}
-    </p>
+    <!-- <div class="px-3 text-xl text-center border-b border-gray-200">
+      {{ truncateFilenameIfTooLong(targetObj.file_name) }}
+    </div> -->
+
+    <div
+      class="flex cursor-pointer hover:bg-gray-100 transition duration-300 ease-out"
+    >
+      <svg
+        class="file-heart w-6 h-6"
+        :class="{
+          'file-heart': !targetObj.favorited,
+          'file-heart-fill': targetObj.favorited,
+        }"
+        @click="favoriteFile"
+      >
+        <use href="../../assets/Heart.svg#svgHeartEmpty"></use>
+      </svg>
+      <p>{{ targetObj.favorited ? "Unfavorite file" : "Favorite file" }}</p>
+    </div>
+
     <FolderItems v-if="isFolder" :target-obj="targetObj" />
 
     <FileItems
@@ -32,7 +48,7 @@
   </div>
 </template>
 <script setup>
-import { ref, nextTick, computed } from "vue";
+import { ref, nextTick } from "vue";
 import FileItems from "./Items/FileItems.vue";
 import TagModal from "@/components/Modals/TagModal.vue";
 import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
@@ -43,7 +59,6 @@ const { dispatch } = useStore();
 
 const isFile = ref(false);
 const isFolder = ref(false);
-const targetId = ref(null);
 const targetObj = ref({});
 const opened = ref(false);
 const top = ref("0px");
