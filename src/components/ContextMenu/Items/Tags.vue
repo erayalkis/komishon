@@ -5,23 +5,36 @@
     >
       <img :src="TagSvg" class="mr-2" />
       Tags
-      <div class="absolute bg-gray-200 left-40 top-0 tags-div w-44">
-        <template v-for="tag in file.tags">
-          <div class="flex items-center">
-            <div
-              class="w-3 h-3 mr-1"
-              :style="{ backgroundColor: tag.color }"
-            ></div>
-            <p>{{ tag.tag_name }}</p>
-            <img
-              @click="removeTag(file.id, tag)"
-              :src="X"
-              class="w-4 h-4 ml-auto mr-2"
-            />
-          </div>
-        </template>
-        <p @click="$emit('openTagModal')">Add a tag +</p>
-      </div>
+    </div>
+
+    <div
+      class="absolute bg-neutral-50 tags-div w-80 flex border-2 rounded-sm border-gray-200 border-l-0 transition duration-300 ease-out cursor-pointer"
+    >
+      <template v-if="file.tags.length === 0">
+        <h1>No tags available!</h1>
+      </template>
+      <template v-for="tag in file.tags">
+        <div
+          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out"
+        >
+          <div
+            class="w-3 h-3 mr-1"
+            :style="{ backgroundColor: tag.color }"
+          ></div>
+          <p>{{ tag.tag_name }}</p>
+          <img
+            @click="removeTag(file.id, tag)"
+            :src="X"
+            class="w-4 h-4 ml-auto mr-2"
+          />
+        </div>
+      </template>
+      <p
+        @click="$emit('openTagModal')"
+        class="hover:bg-gray-100 transition duration-300 ease-out"
+      >
+        Add a tag +
+      </p>
     </div>
   </div>
 </template>
@@ -49,12 +62,17 @@ const removeTag = async (fileId, tag) => {
 <style>
 .tags-div {
   display: none;
+  top: 38px;
+  left: 188px;
+  z-index: -1;
 }
 
 .tags-div:hover {
   display: block;
 }
-
+.tags-header:hover {
+  border-right-color: #fafafa;
+}
 .tags-header:hover > .tags-div {
   display: block;
 }
