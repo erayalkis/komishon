@@ -18,10 +18,11 @@
           <input type="color" class="w-12 h-12 rounded-full" v-model="color" />
         </div>
         <div class="flex p-3 items-center">
-          <h1 class="text-3xl mr-5">Pick a name:</h1>
+          <h1 class="text-3xl mr-5">Tag Name:</h1>
           <input
             class="indent-3 text-gray-900 p-1 bg-gray-200 rounded-md"
             v-model="name"
+            placeholder="Tag Name"
             required
           />
         </div>
