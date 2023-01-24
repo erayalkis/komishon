@@ -7,7 +7,7 @@
       Deadlines
     </div>
     <div
-      class="absolute bg-neutral-50 deadlines-div w-80 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
+      class="absolute bg-neutral-50 deadlines-div w-60 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
     >
       <template v-if="file.deadlines.length == 0">
         <h1 class="p-3">No deadlines available!</h1>

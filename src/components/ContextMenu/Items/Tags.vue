@@ -8,7 +8,7 @@
     </div>
 
     <div
-      class="absolute bg-neutral-50 tags-div w-80 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
+      class="absolute bg-neutral-50 tags-div w-60 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
     >
       <template v-if="file.tags.length === 0">
         <h1 class="p-3">No tags available!</h1>
