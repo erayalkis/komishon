@@ -12,7 +12,7 @@
     </template>
     <template #body>
       <div class="flex-col">
-        <div class="flex p-3 items-center justify-between w-96">
+        <div class="flex flex-wrap p-3 items-center justify-between w-96">
           <h1 class="text-3xl">Pick a name:</h1>
           <input
             class="indent-3 text-gray-900 p-1 bg-gray-200 rounded-md"
