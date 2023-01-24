@@ -8,17 +8,17 @@
     </div>
 
     <div
-      class="absolute bg-neutral-50 tags-div w-80 flex border-2 rounded-sm border-gray-200 border-l-0 transition duration-300 ease-out cursor-pointer"
+      class="absolute bg-neutral-50 tags-div w-80 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
     >
       <template v-if="file.tags.length === 0">
-        <h1>No tags available!</h1>
+        <h1 class="p-3">No tags available!</h1>
       </template>
       <template v-for="tag in file.tags">
         <div
-          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out"
+          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out p-3"
         >
           <div
-            class="w-3 h-3 mr-1"
+            class="w-6 h-6 rounded-full mr-2"
             :style="{ backgroundColor: tag.color }"
           ></div>
           <p>{{ tag.tag_name }}</p>
@@ -31,7 +31,7 @@
       </template>
       <p
         @click="$emit('openTagModal')"
-        class="hover:bg-gray-100 transition duration-300 ease-out"
+        class="hover:bg-gray-100 border-t border-slate-200 transition duration-300 ease-out p-2"
       >
         Add a tag +
       </p>
@@ -41,11 +41,12 @@
 <script setup>
 import X from "@/assets/X.svg";
 import TagSvg from "@/assets/Tag.svg";
+import { ref } from "vue";
 import { removeTagFromFile } from "@/api/tag/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();
 
-defineProps({
+const props = defineProps({
   file: {
     type: Object,
     default: () => {},

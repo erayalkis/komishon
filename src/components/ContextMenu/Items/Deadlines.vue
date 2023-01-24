@@ -10,14 +10,14 @@
       class="absolute bg-neutral-50 deadlines-div w-80 flex border-2 rounded-sm border-gray-200 transition duration-300 ease-out cursor-pointer"
     >
       <template v-if="file.deadlines.length == 0">
-        <h1>No deadlines available!</h1>
+        <h1 class="p-3">No deadlines available!</h1>
       </template>
       <template v-else v-for="deadline in file.deadlines">
         <div
-          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out"
+          class="flex items-center hover:bg-gray-100 transition duration-300 ease-out p-3"
         >
-          <p>{{ deadline.title }}</p>
-          <p>{{ new Date(deadline.date * 1000).toDateString() }}</p>
+          <p class="mr-3">{{ deadline.title }}:</p>
+          <p>Due {{ new Date(deadline.date * 1000).toDateString() }}</p>
           <img
             @click="removeDeadline(file.id, deadline)"
             :src="X"
@@ -27,7 +27,7 @@
       </template>
       <p
         @click="$emit('openDeadlineModal')"
-        class="hover:bg-gray-100 transition duration-300 ease-out"
+        class="hover:bg-gray-100 border-t border-slate-200 transition duration-300 ease-out p-2"
       >
         Add a deadline +
       </p>
