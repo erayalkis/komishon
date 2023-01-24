@@ -127,16 +127,17 @@ _Below is an example of how you can instruct your audience on installing and set
 **Before v1.0:**
 
 - [ ] Add changelogs
-- [ ] Update search functions
 - [ ] Refactor code
 - [ ] Revamp frontend
-- [ ] Add notifications
+
 
 **After v1.0:**
 
+- [ ] Add notifications
 - [ ] Cross-platform support
 - [ ] Add drag and drop functionality
 - [ ] Add more actions to context menu
+- [ ] Update search functions
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
