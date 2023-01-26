@@ -218,41 +218,22 @@ pub fn search_by_name(input: &str) -> String {
 }
 
 #[tauri::command]
-pub fn fetch_files_with_deadlines() -> String {
+pub fn get_files_by_deadline(deadline: i64) -> String {
     let conn = get_db().unwrap();
     let query = 
     "
-    SELECT *, F.ID as file_id, F.parent_path AS file_parent_path, D.ID as deadline_id, D.parent_path AS deadline_parent_path FROM DEADLINES D JOIN FILES F ON D.parent_id = F.ID ORDER BY D.date ASC;
+    SELECT F.ID AS file_id, F.file_name AS file_name, F.file_type AS file_type, F.path AS file_path, F.parent_path AS file_parent_path, F.is_dir AS is_dir, F.is_base_dir AS is_base_dir, F.favorited as favorited, F.byte_size AS byte_size,
+    T.ID AS tag_id, T.tag_name AS tag_name, T.parent_path as tag_parent_path, T.parent_id AS tag_parent_id, T.color AS tag_color, 
+    D.ID AS deadline_id, D.title AS title, D.date AS date, D.parent_path AS deadline_parent_path, D.parent_id AS deadline_parent_id
+    FROM FILES F
+    LEFT JOIN TAGS T ON F.ID == T.parent_id
+    LEFT JOIN DEADLINES D ON F.ID == D.parent_id
+    WHERE D.date = ?
+    ORDER BY F.is_dir DESC;
     ";
-    let mut statement = conn.prepare(query).unwrap();
-
-    let mut deadlines: HashMap<i64, Vec<File>> = HashMap::new();
-
-    while let Ok(State::Row) = statement.next() {
-        let date = statement.read::<i64, _>("date").unwrap();
-
-        if !deadlines.contains_key(&date) {
-            deadlines.insert(date, Vec::new());
-        }
-
-        let file = File {
-            id: statement.read::<i64, _>("file_id").unwrap(),
-            file_name: statement.read::<String, _>("file_name").unwrap(),
-            file_type: statement.read::<String, _>("file_type").unwrap(),
-            path: statement.read::<String, _>("path").unwrap(),
-            parent_path: statement.read::<String, _>("file_parent_path").unwrap(),
-            is_dir: statement.read::<i64, _>("is_dir").unwrap(),
-            is_base_dir: statement.read::<i64, _>("is_base_dir").unwrap(),
-            favorited: statement.read::<i64, _>("favorited").unwrap(),
-            byte_size: statement.read::<i64, _>("byte_size").unwrap(),
-            tags: Some(Vec::new()),
-            deadlines: Some(Vec::new())
-        };
-
-        deadlines.get_mut(&date).unwrap().push(file);
-    }
-
-    let serialized = serde_json::to_string(&deadlines).unwrap();
+    let vec = vec!((1, deadline));
+    let mut statement = get_statement_from_query(&conn, query, vec);
+    let serialized = get_serialized_file_string(&mut statement);
 
     return serialized;
 }

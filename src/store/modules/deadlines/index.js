@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 
 const deadlines = {
   state: {
-    deadlines: {},
+    deadlines: [],
   },
   getters: {},
   mutations: {
@@ -12,11 +12,22 @@ const deadlines = {
   },
   actions: {
     async loadDeadlines({ commit }) {
-      const res = await invoke("fetch_files_with_deadlines");
-      const res2 = await invoke("get_deadlines");
-      console.log(JSON.parse(res2));
+      const res = await invoke("get_deadlines");
       const deadlines = JSON.parse(res);
       commit("setDeadlines", deadlines);
+    },
+    async getFilesByDeadlineDate(ctx, deadline) {
+      const unixStamp = Math.floor(deadline.getTime() / 1000);
+      console.log(unixStamp);
+
+      const res = await invoke("get_files_by_deadline", {
+        deadline: unixStamp,
+      });
+      console.log(res);
+      const files = JSON.parse(res);
+
+      console.log(files);
+      // return files;
     },
   },
 };
