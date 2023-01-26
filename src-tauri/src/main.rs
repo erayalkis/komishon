@@ -9,7 +9,7 @@ mod watcher;
 
 use crate::watcher::{ GLOBAL_WATCHER, create_watcher, watch_base_dirs };
 use std::sync::{Mutex, Arc};
-use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline};
+use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline, get_deadlines};
 use models::tag::{add_tag_to_file, remove_tag_from_file};
 use models::file::{get_base_dirs, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name, update_favorite_status, fetch_files_with_deadlines, fetch_favorited_files, fetch_single_file};
 use helpers::database::create_db_if_not_exists;
@@ -46,7 +46,8 @@ fn main() {
         watch_base_dirs,
         fetch_files_with_deadlines,
         fetch_favorited_files,
-        fetch_single_file
+        fetch_single_file,
+        get_deadlines
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

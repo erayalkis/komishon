@@ -1,5 +1,6 @@
 use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
+use sqlite::State;
 
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
@@ -9,6 +10,29 @@ pub struct Deadline {
     pub date: i64,
     pub parent_path: String,
     pub parent_id: i64
+}
+
+#[tauri::command]
+pub fn get_deadlines() -> Result<String, &'static str> {
+    let conn = get_db().unwrap();
+    let query = "SELECT * FROM DEADLINES;";
+    let mut statement = conn.prepare(query).unwrap();
+    
+    let mut deadlines: Vec<Deadline> = Vec::new();
+    while let Ok(State::Row) = statement.next() {
+        let deadline = Deadline {
+            id: Some(statement.read::<i64, _>("ID").unwrap()),
+            title: statement.read::<String, _>("title").unwrap(),
+            date: statement.read::<i64, _>("date").unwrap(),
+            parent_path: statement.read::<String, _>("parent_path").unwrap(),
+            parent_id: statement.read::<i64,_>("parent_id").unwrap()
+        };
+
+        deadlines.push(deadline);
+    }
+
+    let serialized = serde_json::to_string(&deadlines).unwrap();
+    return Ok(serialized)
 }
 
 #[tauri::command]
