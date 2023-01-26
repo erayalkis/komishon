@@ -5,11 +5,17 @@
     :select-attribute="selectAttribute"
     :model-config="dateConfig"
   />
+  <template v-if="files.length > 0">
+    <Files :files="files" />
+  </template>
+  <template v-else>
+    <h1>No deadline on {{ parsedChosenDate.toLocaleString() }}</h1>
+  </template>
 </template>
 <script setup>
 import { onMounted, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
-import File from "@/components/Files/File.vue";
+import Files from "@/components/Files/Files.vue";
 import "v-calendar/dist/style.css";
 
 const { dispatch, state } = useStore();
@@ -17,6 +23,7 @@ const { dispatch, state } = useStore();
 const deadlines = computed(() => state.deadlines.deadlines);
 const files = ref([]);
 const chosenDate = ref(new Date());
+const parsedChosenDate = computed(() => new Date(chosenDate.value));
 
 onMounted(async () => {
   await dispatch("loadDeadlines");
@@ -25,18 +32,19 @@ onMounted(async () => {
   date.setMinutes(0);
   date.setSeconds(0);
 
-  files.value = dispatch("getFilesByDeadlineDate", chosenDate.value);
+  files.value = await dispatch("getFilesByDeadlineDate", chosenDate.value);
 });
 
-watch(chosenDate, () => {
+watch(chosenDate, async () => {
   const date = new Date(chosenDate.value);
   date.setHours(3);
   date.setMinutes(0);
   date.setSeconds(0);
 
-  const files = dispatch("getFilesByDeadlineDate", date);
+  const newFiles = await dispatch("getFilesByDeadlineDate", date);
 
-  console.log(files);
+  console.log(newFiles);
+  files.value = newFiles;
 });
 
 const dateObj = computed(() => {

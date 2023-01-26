@@ -26,8 +26,7 @@ const deadlines = {
       console.log(res);
       const files = JSON.parse(res);
 
-      console.log(files);
-      // return files;
+      return files;
     },
   },
 };
