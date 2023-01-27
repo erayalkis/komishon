@@ -1,9 +1,6 @@
 <template>
-  <TagModal @close-tag-modal="closeTagModal" :target-obj="targetObj" />
-  <DeadlineModal
-    @close-deadline-modal="closeDeadlineModal"
-    :target-obj="targetObj"
-  />
+  <TagModal v-if="viewSettings.tag" />
+  <DeadlineModal v-if="viewSettings.deadline" />
   <div class="bg-stone-50 h-screen overflow-y-hidden flex">
     <Navbar />
     <div class="w-full">
@@ -15,7 +12,7 @@
 
 <script setup>
 import { invoke } from "@tauri-apps/api/tauri";
-import { onBeforeMount, onUnmounted, ref } from "vue";
+import { onBeforeMount, onUnmounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
 import Navbar from "./components/Nav/Navbar.vue";
@@ -23,8 +20,9 @@ import TagModal from "@/components/Modals/TagModal.vue";
 import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import HomeNav from "./components/Home/HomeNav.vue";
 
-const { commit, dispatch } = useStore();
+const { commit, dispatch, state } = useStore();
 const unlisteners = ref([]);
+const viewSettings = computed(() => state.modals.view);
 
 const setupListeners = async () => {
   const unlistenRename = await listen("file-rename", (event) => {
