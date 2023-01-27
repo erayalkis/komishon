@@ -30,7 +30,7 @@
         </div>
       </template>
       <p
-        @click="$emit('openTagModal')"
+        @click="openTagModal"
         class="hover:bg-gray-100 border-t border-slate-200 transition duration-300 ease-out p-2"
       >
         Add a tag +
@@ -53,7 +53,10 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["openTagModal"]);
+const openTagModal = () => {
+  commit("setTagView", true);
+  commit("setTargetFile", props.file);
+};
 
 const removeTag = async (fileId, tag) => {
   await removeTagFromFile(tag);

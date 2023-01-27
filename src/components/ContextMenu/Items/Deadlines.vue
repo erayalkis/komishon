@@ -26,7 +26,7 @@
         </div>
       </template>
       <p
-        @click="$emit('openDeadlineModal')"
+        @click="openDeadlineModal"
         class="hover:bg-gray-100 border-t border-slate-200 transition duration-300 ease-out p-2"
       >
         Add a deadline +
@@ -48,7 +48,9 @@ defineProps({
   },
 });
 
-const emits = defineEmits("openDeadlineModal");
+const openDeadlineModal = () => {
+  commit("setDeadlineView", true);
+};
 
 const removeDeadline = async (fileId, deadline) => {
   await removeDeadlineFromFile(deadline);

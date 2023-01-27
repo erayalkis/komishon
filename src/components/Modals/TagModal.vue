@@ -7,7 +7,7 @@
         <img
           :src="X"
           class="ml-auto mr-3 cursor-pointer"
-          @click="$emit('closeTagModal')"
+          @click="closeTagModal"
         />
       </div>
     </template>
@@ -31,7 +31,7 @@
     <template #footer>
       <div class="flex gap-3 justify-center">
         <button
-          @click="$emit('closeTagModal')"
+          @click="closeTagModal"
           class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
         >
           Cancel
@@ -50,37 +50,33 @@
 import BaseModal from "./ModalBase.vue";
 import X from "@/assets/X.svg";
 import TagSvg from "@/assets/Tag.svg";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { addTagToFile } from "@/api/tag/actions.js";
 import { useStore } from "vuex";
 
-const { commit } = useStore();
-
-const props = defineProps({
-  targetObj: {
-    type: Object,
-    default: () => {},
-  },
-});
-
-const emit = defineEmits(["closeTagModal"]);
+const { commit, state } = useStore();
 
 const name = ref("");
 const color = ref("#000000");
+const targetObj = computed(() => state.modals.targetFile);
+
+const closeTagModal = () => {
+  commit("setTagView", false);
+};
 
 const saveTag = async () => {
   if (!name.value) return;
 
   const tagData = {
     tag_name: name.value,
-    parent_path: props.targetObj.path,
-    parent_id: props.targetObj.id,
+    parent_path: targetObj.value.path,
+    parent_id: targetObj.value.id,
     color: color.value,
   };
 
   const tag = await addTagToFile(tagData);
 
-  commit("addTagToFile", { id: props.targetObj.id, tag });
-  emit("closeTagModal");
+  commit("addTagToFile", { id: targetObj.value.id, tag });
+  closeTagModal();
 };
 </script>

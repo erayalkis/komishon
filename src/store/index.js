@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import modals from "./modals";
 import deadlines from "./modules/deadlines";
 import favorites from "./modules/favorites";
 import filesystem from "./modules/filesystem/index";
@@ -10,6 +11,7 @@ const store = createStore({
     deadlines: deadlines,
     favorites: favorites,
     settings: settings,
+    modals: modals,
   },
 });
 

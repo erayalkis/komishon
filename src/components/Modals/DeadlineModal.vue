@@ -7,7 +7,7 @@
         <img
           :src="X"
           class="mr-3 cursor-pointer ml-auto"
-          @click="$emit('closeDeadlineModal')"
+          @click="closeDeadlineModal"
         />
       </div>
     </template>
@@ -35,7 +35,7 @@
     <template #footer>
       <div class="flex gap-3 justify-center">
         <button
-          @click="$emit('closeDeadlineModal')"
+          @click="closeDeadlineModal"
           class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
         >
           Cancel
@@ -54,23 +54,19 @@
 import BaseModal from "./ModalBase.vue";
 import X from "@/assets/X.svg";
 import Calendar from "@/assets/Calendar.svg";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { addDeadlineToFile } from "@/api/deadline/actions.js";
 import { useStore } from "vuex";
 
-const { commit } = useStore();
+const { commit, state } = useStore();
 
-const props = defineProps({
-  targetObj: {
-    type: Object,
-    default: () => {},
-  },
-});
-
-const emit = defineEmits(["closeDeadlineModal"]);
+const closeDeadlineModal = () => {
+  commit("setDeadlineView", false);
+};
 
 const name = ref("");
 const date = ref("");
+const targetObj = computed(() => state.modals.targetFile);
 
 const saveDeadline = async () => {
   if (!name.value || !date.value) return;
@@ -81,16 +77,16 @@ const saveDeadline = async () => {
   const deadlineData = {
     title: name.value,
     date: unixStamp,
-    parent_path: props.targetObj.path,
-    parent_id: props.targetObj.id,
+    parent_path: targetObj.value.path,
+    parent_id: targetObj.value.id,
   };
 
   const deadline = await addDeadlineToFile(deadlineData);
 
   commit("addDeadlineToFile", {
-    id: props.targetObj.id,
+    id: targetObj.value.id,
     deadline,
   });
-  emit("closeDeadlineModal");
+  closeDeadlineModal();
 };
 </script>

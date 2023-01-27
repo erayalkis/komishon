@@ -11,7 +11,7 @@ const modals = {
     setTagView(state, shouldView) {
       state.view.tag = shouldView;
     },
-    addDeadline(state, shouldView) {
+    setDeadlineView(state, shouldView) {
       state.view.deadline = shouldView;
     },
     setTargetFile(state, file) {

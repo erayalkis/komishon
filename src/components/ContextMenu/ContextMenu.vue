@@ -1,15 +1,5 @@
 <template>
   <div>
-    <TagModal
-      v-if="showTagModal"
-      @close-tag-modal="closeTagModal"
-      :target-obj="targetObj"
-    />
-    <DeadlineModal
-      v-if="showDeadlineModal"
-      @close-deadline-modal="closeDeadlineModal"
-      :target-obj="targetObj"
-    />
     <div
       class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-48"
       v-if="opened"
@@ -40,21 +30,13 @@
       </div>
 
       <FolderItems v-if="isFolder" :target-obj="targetObj" />
-
-      <FileItems
-        v-if="isFile"
-        :target-obj="targetObj"
-        @open-tag-modal="openTagModal"
-        @open-deadline-modal="openDeadlineModal"
-      />
+      <FileItems v-if="isFile" :target-obj="targetObj" />
     </div>
   </div>
 </template>
 <script setup>
 import { ref, nextTick } from "vue";
 import FileItems from "./Items/FileItems.vue";
-import TagModal from "@/components/Modals/TagModal.vue";
-import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import FolderItems from "./Items/FolderItems.vue";
 import { useStore } from "vuex";
 
@@ -73,8 +55,6 @@ const opened = ref(false);
 const top = ref("0px");
 const left = ref("0px");
 const menu = ref(null);
-const showTagModal = ref(false);
-const showDeadlineModal = ref(false);
 
 const close = () => {
   opened.value = false;
@@ -106,24 +86,6 @@ const setMenu = (eleTop, eleLeft) => {
   if (eleLeft > largestWidth) eleLeft = largestWidth;
   top.value = eleTop + "px";
   left.value = eleLeft + "px";
-};
-
-const openTagModal = () => {
-  opened.value = false;
-  showTagModal.value = true;
-};
-
-const closeTagModal = () => {
-  showTagModal.value = false;
-};
-
-const openDeadlineModal = () => {
-  opened.value = false;
-  showDeadlineModal.value = true;
-};
-
-const closeDeadlineModal = () => {
-  showDeadlineModal.value = false;
 };
 
 const updateFileFav = async () => {
