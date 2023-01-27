@@ -1,4 +1,4 @@
-const deadlines = {
+const modals = {
   state: {
     view: {
       tag: false,
