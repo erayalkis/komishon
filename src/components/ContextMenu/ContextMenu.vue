@@ -30,7 +30,11 @@
       </div>
 
       <FolderItems v-if="isFolder" :target-obj="targetObj" />
-      <FileItems v-if="isFile" :target-obj="targetObj" />
+      <FileItems
+        v-if="isFile"
+        :target-obj="targetObj"
+        :uses-props="usesProps"
+      />
     </div>
   </div>
 </template>

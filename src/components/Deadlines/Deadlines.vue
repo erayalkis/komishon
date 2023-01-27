@@ -69,7 +69,7 @@
       {{ files.length }} {{ files.length == 1 ? "deadline" : "deadlines" }} on
       {{ parsedChosenDate.toDateString() }}
     </h1>
-    <Files :files="files" />
+    <Files />
   </template>
   <template v-else>
     <h1 class="text-2xl text-gray-900 p-3">
@@ -84,10 +84,10 @@ import Files from "@/components/Files/Files.vue";
 import Calendar from "@/assets/Calendar.svg?url";
 import "v-calendar/dist/style.css";
 
-const { dispatch, state } = useStore();
+const { dispatch, state, commit } = useStore();
 
 const deadlines = computed(() => state.deadlines.deadlines);
-const files = ref([]);
+const files = computed(() => state.files.children);
 const upcomingDeadlines = ref([]);
 const pastDeadlines = ref([]);
 const calendar = ref(null);
@@ -101,7 +101,12 @@ onMounted(async () => {
   date.setMinutes(0);
   date.setSeconds(0);
 
-  files.value = await dispatch("getFilesByDeadlineDate", chosenDate.value);
+  const deadlineFiles = await dispatch(
+    "getFilesByDeadlineDate",
+    chosenDate.value
+  );
+  commit("setChildren", deadlineFiles);
+  console.log(files.value);
   upcomingDeadlines.value = await dispatch("getUpcomingDeadlines");
   pastDeadlines.value = await dispatch("getPastDeadlines");
 });
@@ -114,7 +119,7 @@ watch(chosenDate, async () => {
 
   const newFiles = await dispatch("getFilesByDeadlineDate", date);
 
-  files.value = newFiles;
+  commit("setChildren", newFiles);
 });
 
 const setChosenDate = async (unixStamp) => {

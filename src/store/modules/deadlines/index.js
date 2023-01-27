@@ -18,6 +18,8 @@ const deadlines = {
       const res = await invoke("get_deadlines");
       const deadlines = JSON.parse(res);
       commit("setDeadlines", deadlines);
+
+      return deadlines;
     },
     async getFilesByDeadlineDate(ctx, deadline) {
       const unixStamp = Math.floor(deadline.getTime() / 1000);
