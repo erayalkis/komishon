@@ -66,14 +66,23 @@
   </div>
   <template v-if="files.length > 0">
     <h1 class="text-2xl text-gray-900 p-3">
-      {{ files.length }} {{ files.length == 1 ? "deadline" : "deadlines" }} on
-      {{ parsedChosenDate.toDateString() }}
+      {{ files.length }} {{ files.length == 1 ? "deadline" : "deadlines" }}
+      {{
+        parsedChosenDate.toDateString() === todaysDate
+          ? "due today"
+          : `on ${parsedChosenDate.toDateString()}`
+      }}
     </h1>
     <Files />
   </template>
   <template v-else>
     <h1 class="text-2xl text-gray-900 p-3">
-      No deadlines on {{ parsedChosenDate.toDateString() }}
+      No deadlines on
+      {{
+        parsedChosenDate.toDateString() === todaysDate
+          ? "due today"
+          : parsedChosenDate.toDateString()
+      }}
     </h1>
   </template>
 </template>
@@ -91,6 +100,7 @@ const files = computed(() => state.files.children);
 const upcomingDeadlines = ref([]);
 const pastDeadlines = ref([]);
 const calendar = ref(null);
+const todaysDate = new Date().toDateString();
 const chosenDate = ref(new Date());
 const parsedChosenDate = computed(() => new Date(chosenDate.value));
 
@@ -106,7 +116,6 @@ onMounted(async () => {
     chosenDate.value
   );
   commit("setChildren", deadlineFiles);
-  console.log(files.value);
   upcomingDeadlines.value = await dispatch("getUpcomingDeadlines");
   pastDeadlines.value = await dispatch("getPastDeadlines");
 });
