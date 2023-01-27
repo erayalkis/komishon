@@ -29,6 +29,34 @@ const deadlines = {
 
       return files;
     },
+    getUpcomingDeadlines(ctx) {
+      const deadlines = ctx.state.deadlines;
+      const today = new Date();
+      today.setHours(3);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      const timeStamp = Math.floor(today.getTime() / 1000);
+
+      const upcomingDeadlines = deadlines
+        .filter((deadline) => deadline.date > timeStamp)
+        .sort((a, b) => a.date - b.date);
+
+      return upcomingDeadlines;
+    },
+    getPastDeadlines(ctx) {
+      const deadlines = ctx.state.deadlines;
+      const today = new Date();
+      today.setHours(3);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      const timeStamp = Math.floor(today.getTime() / 1000);
+
+      const pastDeadlines = deadlines
+        .filter((deadline) => deadline.date < timeStamp)
+        .sort((a, b) => a.date - b.date);
+
+      return pastDeadlines;
+    },
   },
 };
 
