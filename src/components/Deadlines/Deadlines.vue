@@ -6,10 +6,16 @@
     :model-config="dateConfig"
   />
   <template v-if="files.length > 0">
+    <h1 class="text-xl text-gray-900">
+      {{ files.length }} {{ files.length == 1 ? "deadline" : "deadlines" }} on
+      {{ parsedChosenDate.toDateString() }}
+    </h1>
     <Files :files="files" />
   </template>
   <template v-else>
-    <h1>No deadline on {{ parsedChosenDate.toLocaleString() }}</h1>
+    <h1 class="text-xl text-gray-900">
+      No deadlines on {{ parsedChosenDate.toDateString() }}
+    </h1>
   </template>
 </template>
 <script setup>
@@ -43,12 +49,10 @@ watch(chosenDate, async () => {
 
   const newFiles = await dispatch("getFilesByDeadlineDate", date);
 
-  console.log(newFiles);
   files.value = newFiles;
 });
 
 const dateObj = computed(() => {
-  console.log(deadlines.value);
   const dates = [];
 
   deadlines.value?.forEach((deadline) => {

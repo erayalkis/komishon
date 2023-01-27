@@ -9,6 +9,9 @@ const deadlines = {
     setDeadlines(state, deadlines) {
       state.deadlines = deadlines;
     },
+    addDeadline(state, deadline) {
+      state.deadlines.push(deadline);
+    },
   },
   actions: {
     async loadDeadlines({ commit }) {
@@ -18,12 +21,10 @@ const deadlines = {
     },
     async getFilesByDeadlineDate(ctx, deadline) {
       const unixStamp = Math.floor(deadline.getTime() / 1000);
-      console.log(unixStamp);
 
       const res = await invoke("get_files_by_deadline", {
         deadline: unixStamp,
       });
-      console.log(res);
       const files = JSON.parse(res);
 
       return files;
