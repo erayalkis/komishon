@@ -131,7 +131,6 @@ const updateFileFav = async () => {
     file: targetObj.value,
     isFav: targetObj.value.favorited ? 0 : 1,
   });
-  console.log(props.usesProps);
   if (props.usesProps) {
     emit("updatePropsFileFav", targetObj.value.id);
   }

@@ -42,9 +42,7 @@ const props = defineProps({
 const children = computed(() => state.files.children);
 
 const updateFileFavStatus = (id) => {
-  console.log(id);
   const target = props.files.find((file) => file.id === id);
-  console.log(target);
   target.favorited = target.favorited ? 0 : 1;
 };
 </script>
