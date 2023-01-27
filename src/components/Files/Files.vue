@@ -7,12 +7,15 @@
     <template v-if="files !== null" v-for="child in files" :key="child.id">
       <File
         :data="child"
+        :uses-props="true"
         @contextmenu.prevent="$refs.ctxMenu.open($event, child)"
+        @update-props-file-fav="updateFileFavStatus"
       />
     </template>
     <template v-else v-for="child in children" :key="child.file_name">
       <File
         :data="child"
+        :uses-props="false"
         @contextmenu.prevent="$refs.ctxMenu.open($event, child)"
       />
     </template>
@@ -25,7 +28,7 @@ import File from "./File.vue";
 import ContextMenu from "../ContextMenu/ContextMenu.vue";
 const { state } = useStore();
 
-defineProps({
+const props = defineProps({
   files: {
     type: Array,
     default: () => null,
@@ -33,4 +36,9 @@ defineProps({
 });
 
 const children = computed(() => state.files.children);
+
+const updateFileFavStatus = (id) => {
+  const target = props.files.find((file) => file.id === id);
+  target.favorited = target.favorited ? 0 : 1;
+};
 </script>

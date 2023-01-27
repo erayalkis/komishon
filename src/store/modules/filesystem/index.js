@@ -167,6 +167,8 @@ const filesystem = {
       await invoke("update_favorite_status", { file, isFav });
       const children = state.children;
       const targetFile = children.find((child) => child.id === file.id);
+      if (!targetFile) return;
+
       targetFile.favorited = isFav;
       state.children = children;
     },

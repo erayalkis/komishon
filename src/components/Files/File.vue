@@ -33,7 +33,10 @@ const { dispatch } = useStore();
 
 const props = defineProps({
   data: Object,
+  usesProps: Boolean,
 });
+
+const emit = defineEmits(["updatePropsFileFav"]);
 
 function goTo(dir, idx = null) {
   if (!dir.is_dir) {
@@ -48,6 +51,9 @@ const favoriteFile = () => {
     file: props.data,
     isFav: props.data.favorited ? 0 : 1,
   });
+  if (props.usesProps) {
+    emit("updatePropsFileFav", props.data.id);
+  }
 };
 
 function truncateFilenameIfTooLong(filename) {
