@@ -1,5 +1,5 @@
 <template>
-  <ContextMenu ref="ctxMenu" />
+  <ContextMenu ref="ctxMenu" :uses-props="files !== null" />
   <div
     class="flex flex-wrap gap-2 px-3 py-3 overflow-y-auto"
     style="height: full; max-height: 96%"

@@ -58,6 +58,12 @@ import { useStore } from "vuex";
 
 const { dispatch } = useStore();
 
+const props = defineProps({
+  usesProps: Boolean,
+});
+
+const emits = defineEmits(["updatePropsFileFav"]);
+
 const isFile = ref(false);
 const isFolder = ref(false);
 const targetObj = ref({});
