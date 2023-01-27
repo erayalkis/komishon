@@ -1,5 +1,9 @@
 <template>
-  <ContextMenu ref="ctxMenu" :uses-props="files !== null" />
+  <ContextMenu
+    ref="ctxMenu"
+    :uses-props="files !== null"
+    @update-props-file-fav="updateFileFavStatus"
+  />
   <div
     class="flex flex-wrap gap-2 px-3 py-3 overflow-y-auto"
     style="height: full; max-height: 96%"
@@ -38,7 +42,9 @@ const props = defineProps({
 const children = computed(() => state.files.children);
 
 const updateFileFavStatus = (id) => {
+  console.log(id);
   const target = props.files.find((file) => file.id === id);
+  console.log(target);
   target.favorited = target.favorited ? 0 : 1;
 };
 </script>

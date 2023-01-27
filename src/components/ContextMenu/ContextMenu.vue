@@ -1,51 +1,53 @@
 <template>
-  <TagModal
-    v-if="showTagModal"
-    @close-tag-modal="closeTagModal"
-    :target-obj="targetObj"
-  />
-  <DeadlineModal
-    v-if="showDeadlineModal"
-    @close-deadline-modal="closeDeadlineModal"
-    :target-obj="targetObj"
-  />
-  <div
-    class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-48"
-    v-if="opened"
-    tabindex="-1"
-    ref="menu"
-    :style="{ top: top, left: left }"
-    @blur="close"
-  >
-    <!-- <div class="px-3 text-xl text-center border-b border-gray-200">
+  <div>
+    <TagModal
+      v-if="showTagModal"
+      @close-tag-modal="closeTagModal"
+      :target-obj="targetObj"
+    />
+    <DeadlineModal
+      v-if="showDeadlineModal"
+      @close-deadline-modal="closeDeadlineModal"
+      :target-obj="targetObj"
+    />
+    <div
+      class="flex-col absolute bg-neutral-50 border-2 rounded-sm border-gray-200 z-50 outline-none w-48"
+      v-if="opened"
+      tabindex="-1"
+      ref="menu"
+      :style="{ top: top, left: left }"
+      @blur="close"
+    >
+      <!-- <div class="px-3 text-xl text-center border-b border-gray-200">
       {{ truncateFilenameIfTooLong(targetObj.file_name) }}
     </div> -->
 
-    <div
-      class="fav-item flex cursor-pointer hover:bg-gray-100 transition duration-300 ease-out py-2 px-1"
-      @click="updateFileFav"
-    >
-      <svg
-        class="file-heart w-6 h-6 mr-2"
-        :class="{
-          'file-heart': !targetObj.favorited,
-          'file-heart-fill': targetObj.favorited,
-        }"
-        @click="favoriteFile"
+      <div
+        class="fav-item flex cursor-pointer hover:bg-gray-100 transition duration-300 ease-out py-2 px-1"
+        @click="updateFileFav"
       >
-        <use href="../../assets/Heart.svg#svgHeartEmpty"></use>
-      </svg>
-      <p>{{ targetObj.favorited ? "Unfavorite file" : "Favorite file" }}</p>
+        <svg
+          class="file-heart w-6 h-6 mr-2"
+          :class="{
+            'file-heart': !targetObj.favorited,
+            'file-heart-fill': targetObj.favorited,
+          }"
+          @click="favoriteFile"
+        >
+          <use href="../../assets/Heart.svg#svgHeartEmpty"></use>
+        </svg>
+        <p>{{ targetObj.favorited ? "Unfavorite file" : "Favorite file" }}</p>
+      </div>
+
+      <FolderItems v-if="isFolder" :target-obj="targetObj" />
+
+      <FileItems
+        v-if="isFile"
+        :target-obj="targetObj"
+        @open-tag-modal="openTagModal"
+        @open-deadline-modal="openDeadlineModal"
+      />
     </div>
-
-    <FolderItems v-if="isFolder" :target-obj="targetObj" />
-
-    <FileItems
-      v-if="isFile"
-      :target-obj="targetObj"
-      @open-tag-modal="openTagModal"
-      @open-deadline-modal="openDeadlineModal"
-    />
   </div>
 </template>
 <script setup>
@@ -62,7 +64,7 @@ const props = defineProps({
   usesProps: Boolean,
 });
 
-const emits = defineEmits(["updatePropsFileFav"]);
+const emit = defineEmits(["updatePropsFileFav"]);
 
 const isFile = ref(false);
 const isFolder = ref(false);
@@ -129,6 +131,10 @@ const updateFileFav = async () => {
     file: targetObj.value,
     isFav: targetObj.value.favorited ? 0 : 1,
   });
+  console.log(props.usesProps);
+  if (props.usesProps) {
+    emit("updatePropsFileFav", targetObj.value.id);
+  }
 };
 
 defineExpose({
