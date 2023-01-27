@@ -20,4 +20,4 @@ const deadlines = {
   },
 };
 
-export default deadlines;
+export default modals;
