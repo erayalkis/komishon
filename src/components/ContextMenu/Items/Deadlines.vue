@@ -16,7 +16,7 @@
         <div
           class="flex items-center hover:bg-gray-100 transition duration-300 ease-out p-3"
         >
-          <p class="mr-3">{{ deadline.title }}:</p>
+          <p class="mr-3">{{ truncatedName(deadline.title) }}:</p>
           <p>Due {{ new Date(deadline.date * 1000).toDateString() }}</p>
           <img
             @click="removeDeadline(file.id, deadline)"
@@ -55,6 +55,12 @@ const openDeadlineModal = () => {
 const removeDeadline = async (fileId, deadline) => {
   await removeDeadlineFromFile(deadline);
   commit("removeDeadlineFromFile", { id: fileId, deadline });
+};
+
+const truncatedName = (name) => {
+  if (name.length > 15) return name.slice(0, 12) + "...";
+
+  return name;
 };
 </script>
 <style scoped>

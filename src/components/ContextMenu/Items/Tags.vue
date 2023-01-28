@@ -21,7 +21,7 @@
             class="w-6 h-6 rounded-full mr-2"
             :style="{ backgroundColor: tag.color }"
           ></div>
-          <p>{{ tag.tag_name }}</p>
+          <p>{{ truncatedName(tag.tag_name) }}</p>
           <img
             @click="removeTag(file.id, tag)"
             :src="X"
@@ -41,7 +41,6 @@
 <script setup>
 import X from "@/assets/X.svg";
 import TagSvg from "@/assets/Tag.svg";
-import { ref } from "vue";
 import { removeTagFromFile } from "@/api/tag/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();
@@ -61,6 +60,12 @@ const openTagModal = () => {
 const removeTag = async (fileId, tag) => {
   await removeTagFromFile(tag);
   commit("removeTagFromFile", { id: fileId, tag });
+};
+
+const truncatedName = (name) => {
+  if (name.length > 15) return name.slice(0, 12) + "...";
+
+  return name;
 };
 </script>
 <style scoped>
