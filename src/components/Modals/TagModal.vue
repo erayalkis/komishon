@@ -15,12 +15,16 @@
       <div class="flex-col mb-6">
         <div class="flex p-3 items-center mb-6">
           <h1 class="text-3xl mr-5">Tag Colour:</h1>
-          <input type="color" class="w-12 h-12 rounded-full" v-model="color" />
+          <input
+            type="color"
+            class="w-12 h-12 rounded-full hover:bg-gray-300 transition duration-300 ease-out"
+            v-model="color"
+          />
         </div>
         <div class="flex p-3 items-center">
           <h1 class="text-3xl mr-5">Tag Name:</h1>
           <input
-            class="indent-3 text-gray-900 p-1 bg-gray-200 rounded-md"
+            class="indent-3 text-gray-900 p-1 bg-gray-200 rounded-md hover:bg-gray-300 transition duration-300 ease-out"
             v-model="name"
             placeholder="Tag Name"
             required
@@ -32,13 +36,13 @@
       <div class="flex gap-3 justify-center">
         <button
           @click="closeTagModal"
-          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
+          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 rounded-md transition duration-300 ease-out"
         >
           Cancel
         </button>
         <button
           @click="saveTag"
-          class="py-5 px-8 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
+          class="py-5 px-8 bg-violet-600 text-white hover:bg-violet-700 rounded-md transition duration-300 ease-out"
         >
           Save
         </button>

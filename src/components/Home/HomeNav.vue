@@ -8,7 +8,7 @@
       <input
         @change="search"
         placeholder="Search"
-        class="w-full rounded-md p-1 indent-10 bg-gray-200"
+        class="w-full rounded-md p-1 indent-10 bg-gray-200 hover:bg-gray-300 transition duration-300 ease-out"
       />
       <img :src="Search" class="w-5 h-5 absolute top-1.5 left-2" />
     </div>
