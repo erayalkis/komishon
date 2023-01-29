@@ -18,7 +18,7 @@ const settings = {
     async loadSettings({ commit, dispatch }) {
       try {
         const data = await readTextFile(
-          `${await appDataDir()}/userSettings.json`
+          `${await appDataDir()}userSettings.json`
         );
         commit("updateSettings", JSON.parse(data));
       } catch (e) {

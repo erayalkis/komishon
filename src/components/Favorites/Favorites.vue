@@ -1,11 +1,15 @@
 <template>
-  <Files />
+  <FilesList v-if="viewStyle === 'list'" />
+  <Files v-else />
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import Files from "@/components/Files/Files.vue";
-const { dispatch } = useStore();
+import FilesList from "../Files/FilesList.vue";
+const { state, dispatch } = useStore();
+
+const viewStyle = computed(() => state.settings.preferredViewMode);
 
 onMounted(async () => {
   await dispatch("fetchFavoritedFiles");

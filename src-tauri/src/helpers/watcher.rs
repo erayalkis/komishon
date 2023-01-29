@@ -16,7 +16,7 @@ pub struct EventPayload<'a> {
 }
 
 pub fn handle_watcher_event(event: Event) {
-  let conn = get_db();
+  let conn = get_db().unwrap();
   match &event.kind {
     notify::EventKind::Any => {},
     notify::EventKind::Access(_) => {},
@@ -60,7 +60,7 @@ pub fn handle_watcher_event(event: Event) {
 }
 
 pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) {
-  let conn = get_db();
+  let conn = get_db().unwrap();
   match name_change_event {
     RenameMode::Any => todo!(),
     RenameMode::To => {
