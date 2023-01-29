@@ -5,7 +5,7 @@ use crate::models::deadline::Deadline;
 use crate::models::tag::Tag;
 use crate::helpers::database::get_db;
 
-use std::{collections::HashMap, ffi::OsStr, path::Path};
+use std::{ffi::OsStr, path::Path};
 use sqlite::State;
 use walkdir::WalkDir;
 use serde::{Serialize, Deserialize};
