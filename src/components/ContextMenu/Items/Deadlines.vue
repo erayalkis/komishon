@@ -41,7 +41,7 @@ import { removeDeadlineFromFile } from "@/api/deadline/actions.js";
 import { useStore } from "vuex";
 const { commit } = useStore();
 
-defineProps({
+const props = defineProps({
   file: {
     type: Object,
     default: () => {},
@@ -50,6 +50,7 @@ defineProps({
 
 const openDeadlineModal = () => {
   commit("setDeadlineView", true);
+  commit("setTargetFile", props.file);
 };
 
 const removeDeadline = async (fileId, deadline) => {

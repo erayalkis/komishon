@@ -60,6 +60,7 @@ const filesystem = {
     addDeadlineToFile(state, { id, deadline }) {
       const files = state.children;
       const targetFile = files.find((file) => file.id === id);
+      console.log(id, files, targetFile);
       targetFile.deadlines.push(deadline);
 
       state.children = files;

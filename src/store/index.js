@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import modals from "./modals";
+import modals from "./modules/modals";
 import deadlines from "./modules/deadlines";
 import favorites from "./modules/favorites";
 import filesystem from "./modules/filesystem/index";
