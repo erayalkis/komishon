@@ -68,7 +68,7 @@
 
 ## About The Project
 
-![Komishon Screenshot](https://imgur.com/a/T3olvpA "Main Page").
+![Komishon Screenshot](https://i.imgur.com/aQ2WU7J.png "Main Page").
 
 
 
