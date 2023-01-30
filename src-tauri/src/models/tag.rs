@@ -13,7 +13,7 @@ pub struct Tag {
 
 #[tauri::command]
 pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "INSERT INTO TAGS(tag_name, parent_path, parent_id, color) VALUES (?, ?, ?, ?) RETURNING *";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, &tag.tag_name[..])).unwrap();
@@ -42,7 +42,7 @@ pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
 
 #[tauri::command]
 pub fn remove_tag_from_file(tag: Tag) {
-    let conn = get_db();
+    let conn = get_db().unwrap();
     let query = "DELETE FROM TAGS WHERE id == ?";
     let mut statement = conn.prepare(query).unwrap();
     statement.bind((1, tag.id)).unwrap();

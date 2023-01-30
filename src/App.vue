@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="bg-slate-400 h-screen overflow-y-hidden flex"
-    @contextmenu.prevent="$refs.menu.open"
-  >
+  <TagModal v-if="viewSettings.tag" />
+  <DeadlineModal v-if="viewSettings.deadline" />
+  <div class="bg-stone-50 h-screen overflow-y-hidden flex">
     <Navbar />
-    <ContextMenu ref="menu" />
     <div class="w-full">
       <HomeNav ref="homeNav" />
       <router-view />
@@ -14,16 +12,17 @@
 
 <script setup>
 import { invoke } from "@tauri-apps/api/tauri";
-import { onBeforeMount, onUnmounted, ref } from "vue";
+import { onBeforeMount, onUnmounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
 import Navbar from "./components/Nav/Navbar.vue";
-import ContextMenu from "./components/ContextMenu/ContextMenu.vue";
+import TagModal from "@/components/Modals/TagModal.vue";
+import DeadlineModal from "@/components/Modals/DeadlineModal.vue";
 import HomeNav from "./components/Home/HomeNav.vue";
 
-const { commit, dispatch } = useStore();
-
+const { commit, dispatch, state } = useStore();
 const unlisteners = ref([]);
+const viewSettings = computed(() => state.modals.view);
 
 const setupListeners = async () => {
   const unlistenRename = await listen("file-rename", (event) => {

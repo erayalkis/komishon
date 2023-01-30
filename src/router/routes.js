@@ -21,13 +21,14 @@ const routes = [
     component: () => import("@/components/Favorites/Favorites.vue"),
     beforeEnter: (to) => {
       store.dispatch("setRoutePath", to);
+      // store.dispatch("loadFavorites");
     },
   },
   {
     path: "/deadlines",
     name: "Deadlines",
     component: () => import("@/components/Deadlines/Deadlines.vue"),
-    beforEnter: (to) => {
+    beforeEnter: (to) => {
       store.dispatch("setRoutePath", to);
     },
   },
