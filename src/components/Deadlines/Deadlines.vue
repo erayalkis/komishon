@@ -5,7 +5,7 @@
   >
     <div class="flex-col text-center w-1/3">
       <h1 class="text-xl text-gray-900 mb-2">Past Deadlines</h1>
-      <div>
+      <div class="overflow-auto h-96">
         <template
           v-if="pastDeadlines.length > 0"
           v-for="deadline in pastDeadlines"
