@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/erayalkis/komishon">
-    <img src="https://raw.githubusercontent.com/erayalkis/komishon/master/brush.svg?token=GHSAT0AAAAAAB5RU6ZOAH6W232MTS23IXLYY6YIKRQ" alt="Logo" width="80" height="80">
+    <img src="https://github.com/erayalkis/komishon/blob/master/brush.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Komishon</h3>
