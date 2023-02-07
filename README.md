@@ -31,7 +31,7 @@
   <p align="center">
     Track your art and commissions more efficiently with Komishon!
     <br />
-    <a href="https://github.com/erayalkis/komishon/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/erayalkis/komishon/tree/master/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/erayalkis/komishon/issues">Report Bug</a>
