@@ -7,9 +7,8 @@ use notify::recommended_watcher;
 
 #[cfg(target_os = "windows")]
 use notify::ReadDirectoryChangesWatcher;
-#[cfg(target_os = "linux")]
-use notify::Watcher;
 
+use notify::Watcher;
 use std::sync::Mutex;
 
 #[cfg(target_os = "windows")]
