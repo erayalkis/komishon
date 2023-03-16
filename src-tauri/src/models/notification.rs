@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
 use sqlite::Error;
+use sqlite::State;
 
 use crate::helpers::database::get_db;
 
@@ -9,6 +10,26 @@ pub struct Notification {
   pub title: String,
   pub body: String,
 }
+
+pub fn get_notifications() -> Result<Vec<Notification>, Error> {
+  let conn = get_db().unwrap();
+  let query = "SELECT * FROM NOTIFICATIONS";
+  let mut statement = conn.prepare(query).unwrap();
+
+  let mut notifications: Vec<Notification> = Vec::new();
+  while let Ok(State::Row) = statement.next() {
+      let notification = Notification {
+        id: Some(statement.read::<i64, _>("ID").unwrap()),
+        title: statement.read::<String, _>("title").unwrap(),
+        body: statement.read::<String, _>("body").unwrap(),
+      };
+
+      notifications.push(notification)
+  }
+
+  Ok(notifications)
+}
+
 
 pub fn create_notification(title: String, body: String) -> Result<Notification, Error> {
   let conn = get_db().unwrap();
