@@ -133,6 +133,8 @@ const filesystem = {
         multiple: false,
       });
 
+      if (!dirSelect) return;
+
       await invoke("walk_and_save", {
         baseDir: dirSelect,
       });
