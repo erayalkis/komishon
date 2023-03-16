@@ -18,9 +18,11 @@ const notifications = {
   },
   actions: {
     async getNotifications(ctx) {
-      let notifs = await invoke("get_notifications");
-      console.log(notifs);
-      return notifs;
+      return await invoke("get_notifications");
+    },
+    async loadNotifications(ctx) {
+      let notifs = await ctx.dispatch("getNotifications");
+      ctx.state.notifications = notifs;
     },
     async createDebugNotif(ctx) {
       await invoke("create_notification", {

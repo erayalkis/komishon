@@ -36,21 +36,29 @@
       <img
         :src="Bell"
         class="w-5 h-5 cursor-pointer ml-4"
-        @click="debugNotif"
+        @click="toggleViewNotifs"
       />
+
+      <NotificationsDiv v-if="viewNotifs" />
     </div>
   </div>
 </template>
 <script setup>
 import { useStore } from "vuex";
+import { ref } from "vue";
 import FilePath from "..//FilePath/FilePath.vue";
 import Search from "@/assets/Search.svg?url";
 import Upload from "@/assets/Upload.svg?url";
 import Grid from "@/assets/Grid.svg?url";
 import List from "@/assets/List.svg?url";
 import Bell from "@/assets/Bell.svg?url";
+import NotificationsDiv from "../Notifications/NotificationsDiv.vue";
 
 const { dispatch, commit } = useStore();
+
+const viewNotifs = ref(false);
+
+const toggleViewNotifs = () => (viewNotifs.value = !viewNotifs.value);
 
 async function importFolder() {
   await dispatch("selectFolder");

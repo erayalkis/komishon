@@ -57,7 +57,7 @@ onBeforeMount(async () => {
 
   dispatch("loadSettings");
   dispatch("loadInitialDirs");
-  dispatch("getNotifications");
+  dispatch("loadNotifications");
 });
 
 onUnmounted(async () => {
