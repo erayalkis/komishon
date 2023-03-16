@@ -7,16 +7,18 @@ use notify::recommended_watcher;
 
 #[cfg(target_os = "windows")]
 use notify::ReadDirectoryChangesWatcher;
-#[cfg(target_os = "linux")]
-use notify::Watcher;
 
+#[cfg(target_os = "linux")]
+use notify::INotifyWatcher;
+
+use notify::Watcher;
 use std::sync::Mutex;
 
 #[cfg(target_os = "windows")]
 pub static GLOBAL_WATCHER: Mutex<Option<ReadDirectoryChangesWatcher>> = Mutex::new(None);
 
 #[cfg(target_os = "linux")]
-pub static GLOBAL_WATCHER: Mutex<Option<notify::INotifyWatcher>> = Mutex::new(None);
+pub static GLOBAL_WATCHER: Mutex<Option<INotifyWatcher>> = Mutex::new(None);
 
 
 #[cfg(target_os = "windows")]
