@@ -12,6 +12,7 @@
 
 <script setup>
 import { invoke } from "@tauri-apps/api/tauri";
+import { appDataDir } from "@tauri-apps/api/path";
 import { onBeforeMount, onUnmounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
@@ -55,6 +56,7 @@ onBeforeMount(async () => {
   await invoke("watch_base_dirs");
   await setupListeners();
 
+  console.log(await appDataDir());
   dispatch("loadSettings");
   dispatch("loadInitialDirs");
   dispatch("loadNotifications");

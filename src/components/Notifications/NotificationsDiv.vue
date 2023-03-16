@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute top-12 right-3 bg-neutral-50 border-2 border-gray-200 rounded-md"
+    class="absolute top-12 right-3 bg-neutral-50 border-2 border-gray-200 rounded-md w-80"
   >
     <template
       v-if="notifications.length"

@@ -7,6 +7,7 @@
     <h1>View in file explorer</h1>
   </div>
   <div
+    v-if="targetObj.is_base_dir"
     @click="deleteFolder"
     class="flex hover:bg-gray-100 transition duration-300 ease-out py-2 px-1 cursor-pointer"
   >
