@@ -1,5 +1,4 @@
 use serde::{Serialize, Deserialize};
-use sqlite::Error;
 use sqlite::State;
 
 use crate::GLOBAL_WINDOW;

@@ -6,7 +6,7 @@
       <p class="font-semibold text-lg">{{ data.title }}</p>
       <img :src="X" class="text-gray-100" @click="removeNotif" />
     </div>
-    <p>{{ data.body }}</p>
+    <p>{{ truncateBodyIfTooLong(data.body) }}</p>
   </div>
 </template>
 <script setup>
@@ -21,4 +21,12 @@ const props = defineProps({
 });
 
 const removeNotif = () => invoke("delete_notification", { id: props.data.id });
+
+const truncateBodyIfTooLong = (string) => {
+  if (string.length > 40) {
+    return string.slice(0, 37) + "...";
+  }
+
+  return string;
+};
 </script>

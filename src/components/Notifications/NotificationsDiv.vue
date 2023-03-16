@@ -10,7 +10,7 @@
       <Notification :data="notif" />
     </template>
 
-    <div v-else>
+    <div v-else class="text-2xl text-center px-3 py-1">
       <h1>No notifications yet!</h1>
     </div>
   </div>
