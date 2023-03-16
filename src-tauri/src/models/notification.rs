@@ -21,7 +21,7 @@ pub fn create_notification(title: String, body: String) -> Result<Notification, 
   match query.next() {
     Ok(_) => {
       let notification = Notification {
-        id: Some(query.read::<i64, _>("id").unwrap()),
+        id: Some(query.read::<i64, _>("ID").unwrap()),
         title,
         body
       };
