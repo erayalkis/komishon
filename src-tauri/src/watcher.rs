@@ -4,13 +4,40 @@ use crate::models::file::base_dirs_vec;
 
 use std::path::Path;
 use notify::recommended_watcher;
+
+#[cfg(target_os = "windows")]
 use notify::ReadDirectoryChangesWatcher;
+#[cfg(target_os = "linux")]
 use notify::Watcher;
+
 use std::sync::Mutex;
 
+#[cfg(target_os = "windows")]
 pub static GLOBAL_WATCHER: Mutex<Option<ReadDirectoryChangesWatcher>> = Mutex::new(None);
 
+#[cfg(target_os = "linux")]
+pub static GLOBAL_WATCHER: Mutex<Option<notify::INotifyWatcher>> = Mutex::new(None);
+
+
+#[cfg(target_os = "windows")]
 pub fn create_watcher() -> ReadDirectoryChangesWatcher {
+    // Make this mutable again if errors start popping up (dont think its necessary tho)
+    let file_watcher = recommended_watcher(|res| {
+        match res {
+            Ok(event) => {
+                handle_watcher_event(event);
+            }
+            Err(err) => {
+                println!("Watcher error: {:?}", err);
+            }
+        }
+    }).unwrap();
+
+    return file_watcher;
+}
+
+#[cfg(target_os = "linux")]
+pub fn create_watcher() -> notify::INotifyWatcher {
     // Make this mutable again if errors start popping up (dont think its necessary tho)
     let file_watcher = recommended_watcher(|res| {
         match res {
