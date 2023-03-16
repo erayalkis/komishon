@@ -1,4 +1,3 @@
-
 <a name="readme-top"></a>
 
 <!--
@@ -22,7 +21,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/erayalkis/komishon">
-    <img src="https://github.com/erayalkis/komishon/blob/master/brush.svg" alt="Logo" width="80" height="80">
+    <img src="./logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Komishon</h3>
@@ -68,8 +67,6 @@
 ## About The Project
 
 ![Komishon Screenshot](https://i.imgur.com/aQ2WU7J.png "Main Page").
-
-
 
 Komishon is an app for efficiently tracking commissions while keeping your files organized.
 With features such as tagging for easy organization, and deadline reports for quick reminders for catching up on work, Komishon makes tracking your projects easier.
