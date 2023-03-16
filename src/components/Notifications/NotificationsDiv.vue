@@ -1,16 +1,24 @@
 <template>
-  <div class="absolute top-12 right-3 bg-gray-100 border border-1px-black">
-    <template v-for="notif in notifications" :key="notif.id">
-      <div>
-        <p>{{ notif.title }}</p>
-        <p>{{ notif.body }}</p>
-      </div>
+  <div
+    class="absolute top-12 right-3 bg-neutral-50 border-2 border-gray-200 rounded-md"
+  >
+    <template
+      v-if="notifications.length"
+      v-for="notif in notifications"
+      :key="notif.id"
+    >
+      <Notification :data="notif" />
     </template>
+
+    <div v-else>
+      <h1>No notifications yet!</h1>
+    </div>
   </div>
 </template>
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";
+import Notification from "./Notification.vue";
 
 const { state } = useStore();
 
