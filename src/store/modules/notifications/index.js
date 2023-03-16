@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 
-const modals = {
+const notifications = {
   state: {
     notifications: [],
   },
@@ -24,4 +24,4 @@ const modals = {
   },
 };
 
-export default modals;
+export default notifications;

@@ -11,7 +11,8 @@ pub struct Notification {
   pub body: String,
 }
 
-pub fn get_notifications() -> Result<Vec<Notification>, Error> {
+#[tauri::command]
+pub fn get_notifications() -> Vec<Notification> {
   let conn = get_db().unwrap();
   let query = "SELECT * FROM NOTIFICATIONS";
   let mut statement = conn.prepare(query).unwrap();
@@ -27,10 +28,11 @@ pub fn get_notifications() -> Result<Vec<Notification>, Error> {
       notifications.push(notification)
   }
 
-  Ok(notifications)
+  notifications
 }
 
 
+#[tauri::command]
 pub fn create_notification(title: String, body: String) -> Result<Notification, Error> {
   let conn = get_db().unwrap();
   let statement = "INSERT INTO NOTIFICATIONS(title, body) VALUES (?, ?) RETURNING *";
@@ -57,6 +59,7 @@ pub fn create_notification(title: String, body: String) -> Result<Notification, 
   }
 }
 
+#[tauri::command]
 pub fn delete_notification(id: i64) -> Result<Notification, Error> {
   let conn = get_db().unwrap();
   let statement = "DELETE FROM NOTIFICATIONS WHERE ID = ? RETURNING *";
