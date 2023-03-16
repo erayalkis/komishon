@@ -10,6 +10,8 @@ use sqlite::State;
 use walkdir::WalkDir;
 use serde::{Serialize, Deserialize};
 
+use super::notification::create_notification;
+
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct File {
@@ -28,6 +30,11 @@ pub struct File {
 
 #[tauri::command(async)]
 pub fn walk_and_save(base_dir: &str) {
+    let notif_start_body = format!("Started import for {}", base_dir);
+    let notif_end_body = format!("Import finished for {}", base_dir);
+
+    create_notification("Import started".to_string(), notif_start_body);
+
     let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();
@@ -65,6 +72,8 @@ pub fn walk_and_save(base_dir: &str) {
             }
         }
     }
+
+    create_notification("Import completed".to_string(), notif_end_body);
 }
 
 #[tauri::command]
@@ -191,7 +200,6 @@ pub fn get_children_of(path: &str) -> String {
     return res;
 }
 
-// Remove all the duplicate code, make the query a parameter for a different function, make the code modular
 #[tauri::command]
 pub fn search_by_name(input: &str) -> String {
     let conn = get_db().unwrap();

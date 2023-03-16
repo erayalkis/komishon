@@ -12,6 +12,7 @@
 
 <script setup>
 import { invoke } from "@tauri-apps/api/tauri";
+import { appDataDir } from "@tauri-apps/api/path";
 import { onBeforeMount, onUnmounted, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { listen } from "@tauri-apps/api/event";
@@ -36,10 +37,18 @@ const setupListeners = async () => {
   const unlistenCreate = await listen("file-create", (event) => {
     commit("addFileToChildren", { file: event.payload });
   });
+  const unlistenAddNotif = await listen("notif-create", (event) => {
+    commit("addNotification", event.payload);
+  });
+  const unlistenRemoveNotif = await listen("notif-remove", (event) => {
+    commit("removeNotification", event.payload);
+  });
 
   unlisteners.value.push(unlistenRename);
   unlisteners.value.push(unlistenRemove);
   unlisteners.value.push(unlistenCreate);
+  unlisteners.value.push(unlistenAddNotif);
+  unlisteners.value.push(unlistenRemoveNotif);
 };
 
 onBeforeMount(async () => {
@@ -47,8 +56,10 @@ onBeforeMount(async () => {
   await invoke("watch_base_dirs");
   await setupListeners();
 
+  console.log(await appDataDir());
   dispatch("loadSettings");
   dispatch("loadInitialDirs");
+  dispatch("loadNotifications");
 });
 
 onUnmounted(async () => {
