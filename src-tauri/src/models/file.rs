@@ -10,6 +10,8 @@ use sqlite::State;
 use walkdir::WalkDir;
 use serde::{Serialize, Deserialize};
 
+use super::notification::create_notification;
+
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct File {
@@ -28,6 +30,9 @@ pub struct File {
 
 #[tauri::command(async)]
 pub fn walk_and_save(base_dir: &str) {
+    let notif_body = format!("Started import for {}", base_dir);
+    create_notification("Started import".to_string(), notif_body).expect("Error while creating notification!");
+
     let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
         let entry = entry.unwrap();

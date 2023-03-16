@@ -41,7 +41,7 @@ pub fn delete_notification(id: i64) -> Result<Notification, Error> {
   let statement = "DELETE FROM NOTIFICATIONS WHERE ID = ? RETURNING *";
   
   let mut query = conn.prepare(statement).unwrap();
-  query.bind((1, id));
+  query.bind((1, id)).unwrap();
 
   match query.next() {
     Ok(_) => {
