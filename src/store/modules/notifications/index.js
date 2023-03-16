@@ -7,6 +7,7 @@ const notifications = {
   getters: {},
   mutations: {
     addNotification(state, notification) {
+      console.log(notification);
       state.notifications.push(notification);
     },
     removeNotification(state, notification) {
@@ -20,6 +21,12 @@ const notifications = {
       let notifs = await invoke("get_notifications");
       console.log(notifs);
       return notifs;
+    },
+    async createDebugNotif(ctx) {
+      await invoke("create_notification", {
+        title: "Debug Notif",
+        body: "Debug Notif Body",
+      });
     },
   },
 };

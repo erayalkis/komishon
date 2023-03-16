@@ -33,7 +33,11 @@
         @click="setViewStyle('list')"
       />
 
-      <img :src="Bell" class="w-5 h-5 cursor-pointer ml-4" />
+      <img
+        :src="Bell"
+        class="w-5 h-5 cursor-pointer ml-4"
+        @click="debugNotif"
+      />
     </div>
   </div>
 </template>
@@ -54,6 +58,10 @@ async function importFolder() {
 
 async function setViewStyle(style) {
   commit("setViewStyle", style);
+}
+
+async function debugNotif() {
+  dispatch("createDebugNotif");
 }
 
 async function search(v) {

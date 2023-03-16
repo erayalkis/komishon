@@ -36,10 +36,18 @@ const setupListeners = async () => {
   const unlistenCreate = await listen("file-create", (event) => {
     commit("addFileToChildren", { file: event.payload });
   });
+  const unlistenAddNotif = await listen("notif-create", (event) => {
+    commit("addNotification", event.payload);
+  });
+  const unlistenRemoveNotif = await listen("notif-remove", (event) => {
+    commit("removeNotification", event.payload);
+  });
 
   unlisteners.value.push(unlistenRename);
   unlisteners.value.push(unlistenRemove);
   unlisteners.value.push(unlistenCreate);
+  unlisteners.value.push(unlistenAddNotif);
+  unlisteners.value.push(unlistenRemoveNotif);
 };
 
 onBeforeMount(async () => {

@@ -12,7 +12,7 @@ use std::sync::{Mutex, Arc};
 use models::deadline::{add_deadline_to_file, remove_deadline_from_file, update_file_deadline, get_deadlines};
 use models::tag::{add_tag_to_file, remove_tag_from_file};
 use models::file::{get_base_dirs, get_children_of, walk_and_save, remove_invalid_files_from_db, search_by_name, update_favorite_status, get_files_by_deadline, fetch_favorited_files, fetch_single_file};
-use models::notification::get_notifications;
+use models::notification::{get_notifications, create_notification, delete_notification};
 use helpers::database::create_db_if_not_exists;
 use tauri::{Manager, Window, Config};
 
@@ -49,7 +49,9 @@ fn main() {
         fetch_favorited_files,
         fetch_single_file,
         get_deadlines,
-        get_notifications
+        get_notifications,
+        create_notification,
+        delete_notification
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

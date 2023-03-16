@@ -31,7 +31,7 @@ pub struct File {
 #[tauri::command(async)]
 pub fn walk_and_save(base_dir: &str) {
     let notif_body = format!("Started import for {}", base_dir);
-    create_notification("Started import".to_string(), notif_body).expect("Error while creating notification!");
+    create_notification("Started import".to_string(), notif_body);
 
     let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {

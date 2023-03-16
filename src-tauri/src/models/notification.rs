@@ -2,9 +2,11 @@ use serde::{Serialize, Deserialize};
 use sqlite::Error;
 use sqlite::State;
 
+use crate::GLOBAL_WINDOW;
 use crate::helpers::database::get_db;
 
 #[derive(Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct Notification {
   pub id: Option<i64>,
   pub title: String,
@@ -33,7 +35,7 @@ pub fn get_notifications() -> Vec<Notification> {
 
 
 #[tauri::command]
-pub fn create_notification(title: String, body: String) -> Result<Notification, Error> {
+pub fn create_notification(title: String, body: String){
   let conn = get_db().unwrap();
   let statement = "INSERT INTO NOTIFICATIONS(title, body) VALUES (?, ?) RETURNING *";
 
@@ -49,18 +51,17 @@ pub fn create_notification(title: String, body: String) -> Result<Notification, 
         body
       };
 
-      Ok(notification)
+      GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("notif-create", notification).unwrap();
     } 
     
     Err(err) => {
       println!("Error while inserting notification! {}", err);
-      Err(err)
     }
   }
 }
 
 #[tauri::command]
-pub fn delete_notification(id: i64) -> Result<Notification, Error> {
+pub fn delete_notification(id: i64) {
   let conn = get_db().unwrap();
   let statement = "DELETE FROM NOTIFICATIONS WHERE ID = ? RETURNING *";
   
@@ -75,12 +76,11 @@ pub fn delete_notification(id: i64) -> Result<Notification, Error> {
         body: query.read::<String, _>("body").unwrap()
       };
 
-      Ok(notification)
+      GLOBAL_WINDOW.lock().unwrap().as_mut().unwrap().emit("notif-remove", notification).unwrap();
     }
 
     Err(err) => {
       println!("Error while deleting notification! {}", err);
-      Err(err)
     }
   }
 }
