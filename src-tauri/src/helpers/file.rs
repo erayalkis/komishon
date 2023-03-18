@@ -6,7 +6,8 @@ use super::database::get_db;
 use sqlite::{Statement, State};
 use walkdir::WalkDir;
 
-
+/// Walks through a directory - and its children - and saves it to the database.
+/// This function also registers the `base_dir` into the GLOBAL_WATCHER.
 pub fn add_new_watched_file(base_dir: &str) {
     let conn = get_db().unwrap();
     for (idx, entry) in WalkDir::new(base_dir).into_iter().enumerate() {
@@ -60,6 +61,8 @@ pub fn add_new_watched_file(base_dir: &str) {
     }
 }
 
+/// Given a statement - which *must* include a query for the FILES table -, creates a Vector of File structs by reading the data from the statement parameter.
+/// This function also reads the Tag and Deadline data, and adds it to the `tags` and `deadlines` fields of the File structs. 
 pub fn get_serialized_file_string(statement: &mut Statement) -> String {
     let mut files: Vec<File> = Vec::new();
     let mut seen: HashMap<String, bool> = HashMap::new();
