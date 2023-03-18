@@ -7,6 +7,7 @@ use crate::{helpers::file::add_new_watched_file, GLOBAL_WINDOW};
 
 use super::database::get_db;
 
+/// A struct for holding the payload data for file events.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct EventPayload<'a> {
@@ -15,6 +16,7 @@ pub struct EventPayload<'a> {
   pub name: Option<&'a str>
 }
 
+/// Event handler function for the GLOBAL_WATCHER.
 pub fn handle_watcher_event(event: Event) {
   let conn = get_db().unwrap();
   match &event.kind {
@@ -59,6 +61,7 @@ pub fn handle_watcher_event(event: Event) {
   }
 }
 
+/// Handles file change events, named `handle_name_change` because name change events are it's primary function.
 pub fn handle_name_change_event(name_change_event: &RenameMode, path: &PathBuf) {
   let conn = get_db().unwrap();
   match name_change_event {
