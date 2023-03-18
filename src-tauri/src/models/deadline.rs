@@ -2,6 +2,9 @@ use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 use sqlite::State;
 
+/// A Deadline struct meant to be used with the SQLite3 database Komishon uses.
+/// Has fields for each column on the DEADLINES table.
+/// We save both the `parent_path` and `parent_id` of the deadline so that we can both lookup specific deadlines and search for deadlines based on parent path. 
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct Deadline {
@@ -12,6 +15,8 @@ pub struct Deadline {
     pub parent_id: i64
 }
 
+/// Selects all the deadline entries from the DEADLINES table.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn get_deadlines() -> Result<String, &'static str> {
     let conn = get_db().unwrap();
@@ -35,6 +40,8 @@ pub fn get_deadlines() -> Result<String, &'static str> {
     return Ok(serialized)
 }
 
+/// Inserts a new deadline entry into the database.
+/// Returns the inserted deadline as a JSON string.
 #[tauri::command]
 pub fn add_deadline_to_file(deadline: Deadline) -> Result<Deadline, &'static str> {
     let conn = get_db().unwrap();
@@ -64,6 +71,7 @@ pub fn add_deadline_to_file(deadline: Deadline) -> Result<Deadline, &'static str
     }
 }
 
+/// Removes a deadline entry from the database.
 #[tauri::command]
 pub fn remove_deadline_from_file(deadline: Deadline) {
     let conn = get_db().unwrap();
@@ -79,6 +87,8 @@ pub fn remove_deadline_from_file(deadline: Deadline) {
     }
 }
 
+/// Updates a deadline entry.
+/// Currently takes a Deadline as a parameter, and uses the data of the parameter to update the matching entry in the database.
 #[tauri::command]
 pub fn update_file_deadline(deadline: Deadline) {
     let conn = get_db().unwrap();
