@@ -6,6 +6,7 @@ use crate::GLOBAL_CONFIG;
 
 pub static DB: Mutex<Option<Connection>> = Mutex::new(None);
 
+/// Returns the path of the database file as a PathBuf
 pub fn database_path() -> PathBuf {
   let mutex_binding = GLOBAL_CONFIG.lock().unwrap();
   let conf = mutex_binding.as_ref().unwrap();
@@ -16,6 +17,7 @@ pub fn database_path() -> PathBuf {
   return db_path;
 }
 
+/// Returns the global database Connection instance.
 pub fn get_db() -> std::option::Option<Connection> {
   if DB.lock().unwrap().is_none() {
     connect_to_db();
@@ -24,12 +26,14 @@ pub fn get_db() -> std::option::Option<Connection> {
   return DB.lock().unwrap().take();
 }
 
+/// Creates a Connection instance and sets the value of the global DB variable to the new Connection instance.
 fn connect_to_db() {
   let db_path = database_path().display().to_string();
   let conn = sqlite::open(db_path).unwrap();
   *DB.lock().unwrap() = Some(conn);
 }
 
+/// Given a query string and a Vector of tuples where the first element is the index and the second element is the value of the binding, 
 pub fn get_statement_from_query<'a, T>(conn: &'a Connection, query: &'a str, bindings: Vec<(usize, T)>) -> Statement<'a> where T: sqlite::BindableWithIndex{
   let mut statement = conn.prepare(query).unwrap();
 
@@ -40,6 +44,7 @@ pub fn get_statement_from_query<'a, T>(conn: &'a Connection, query: &'a str, bin
   return statement;
 }
 
+/// Runs the query below, creating the necessary tables and indexes, and creating the database file as a result.
 #[tauri::command]
 pub fn create_db_if_not_exists() {
     let conn = get_db().unwrap();
