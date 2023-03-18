@@ -12,6 +12,8 @@ use serde::{Serialize, Deserialize};
 
 use super::notification::create_notification;
 
+// A File struct meant to be used with the SQLite3 database Komishon uses.
+// Has fields for each column on the FILES table.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct File {
