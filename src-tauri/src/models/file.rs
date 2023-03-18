@@ -12,10 +12,10 @@ use serde::{Serialize, Deserialize};
 
 use super::notification::create_notification;
 
-// A File struct meant to be used with the SQLite3 database Komishon uses.
-// Has fields for each column on the FILES table.
-// We check if a File is a directory using the `is_dir` field.
-// We check if a directory is a root directory using the `is_base_dir` field.
+/// A File struct meant to be used with the SQLite3 database Komishon uses.
+/// Has fields for each column on the FILES table.
+/// We check if a File is a directory using the `is_dir` field.
+/// We check if a directory is a root directory using the `is_base_dir` field.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct File {
