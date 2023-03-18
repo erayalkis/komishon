@@ -14,6 +14,8 @@ use super::notification::create_notification;
 
 // A File struct meant to be used with the SQLite3 database Komishon uses.
 // Has fields for each column on the FILES table.
+// We check if a File is a directory using the `is_dir` field.
+// We check if a directory is a root directory using the `is_base_dir` field.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct File {
@@ -30,6 +32,8 @@ pub struct File {
     pub deadlines: Option<Vec<Deadline>>
 }
 
+/// A function for walking through a directory - and its children - and saving it to the database.
+/// The FILES table has a unique constraint that rejects the same directory from being inserted twice.
 #[tauri::command(async)]
 pub fn walk_and_save(base_dir: &str) {
     let notif_start_body = format!("Started import for {}", base_dir);
@@ -78,6 +82,8 @@ pub fn walk_and_save(base_dir: &str) {
     create_notification("Import completed".to_string(), notif_end_body);
 }
 
+/// Function for fetching base directories (the root directory of the folders that are imported into the database).
+/// Returns a vector of File structs as a JSON string.
 #[tauri::command]
 pub fn get_base_dirs() -> String {
     let conn = get_db().unwrap();
@@ -107,6 +113,7 @@ pub fn get_base_dirs() -> String {
     return serialized;
 }
 
+/// Same function as `get_base_dirs`, will be removed during cleanup.
 pub fn base_dirs_vec() -> Vec<File> {
     let conn = get_db().unwrap();
     let query = "SELECT * FROM FILES WHERE is_base_dir == 1";
@@ -134,6 +141,7 @@ pub fn base_dirs_vec() -> Vec<File> {
     return files;
 }
 
+/// Iterates through all rows in the FILES table and deletes the rows with invalid `path` columns.
 #[tauri::command]
 pub fn remove_invalid_files_from_db() {
     let conn = get_db().unwrap();
@@ -164,6 +172,7 @@ pub fn remove_invalid_files_from_db() {
     }
 }
 
+/// Updates the `favorited` column of a file to the `is_fav` parameter's value.
 #[tauri::command]
 pub fn update_favorite_status(file: File, is_fav: i64) {
     let conn = get_db().unwrap();
@@ -180,6 +189,8 @@ pub fn update_favorite_status(file: File, is_fav: i64) {
     }
 }
 
+/// Returns the children of a directory as a vector of File structs.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn get_children_of(path: &str) -> String {
     let conn = get_db().unwrap();
@@ -202,6 +213,8 @@ pub fn get_children_of(path: &str) -> String {
     return res;
 }
 
+/// Selects any rows in the FILES table where their `file_name` matches the `input` parameter.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn search_by_name(input: &str) -> String {
     let conn = get_db().unwrap();
@@ -227,6 +240,8 @@ pub fn search_by_name(input: &str) -> String {
     return res;
 }
 
+/// Selects any rows in the FILES table that has a deadline matching the `deadline` (A unix timestamp) parameter.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn get_files_by_deadline(deadline: i64) -> String {
     let conn = get_db().unwrap();
@@ -248,6 +263,8 @@ pub fn get_files_by_deadline(deadline: i64) -> String {
     return serialized;
 }
 
+/// Selects all rows in the FILES table that have their `favorited` column set to `1`.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn fetch_favorited_files() -> String {
     let conn = get_db().unwrap();
@@ -270,6 +287,8 @@ pub fn fetch_favorited_files() -> String {
     return res;
 }
 
+/// Selects a single file from the FILES table where the ID column matches the `id` parameter.
+/// Returns a JSON string.
 #[tauri::command]
 pub fn fetch_single_file(id: i64) -> String {
     let conn = get_db().unwrap();
