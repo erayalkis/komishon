@@ -36,13 +36,13 @@
       <div class="flex gap-3 justify-center">
         <button
           @click="closeDeadlineModal"
-          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
+          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out rounded-md"
         >
           Cancel
         </button>
         <button
           @click="saveDeadline"
-          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out"
+          class="py-5 px-6 bg-violet-600 text-white hover:bg-violet-700 transition duration-300 ease-out rounded-md"
         >
           Save
         </button>
