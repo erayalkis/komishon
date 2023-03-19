@@ -4,6 +4,8 @@ use sqlite::State;
 use crate::GLOBAL_WINDOW;
 use crate::helpers::database::get_db;
 
+/// A Notification struct meant to be used with the SQLite3 database Komishon uses.
+/// Has fields for each column on the NOTIFICATIONS table.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct Notification {
@@ -12,6 +14,8 @@ pub struct Notification {
   pub body: String,
 }
 
+/// Selects all the entires from the NOTIFICATIONS table.
+/// Returns a vector of Notifications as a JSON string.
 #[tauri::command]
 pub fn get_notifications() -> Vec<Notification> {
   let conn = get_db().unwrap();
@@ -32,7 +36,7 @@ pub fn get_notifications() -> Vec<Notification> {
   notifications
 }
 
-
+/// Inserts a Notification into the NOTIFICATIONS table.
 #[tauri::command]
 pub fn create_notification(title: String, body: String){
   let conn = get_db().unwrap();
@@ -59,6 +63,7 @@ pub fn create_notification(title: String, body: String){
   }
 }
 
+/// Deletes a Notification from the NOTIFICATIONS table where the ID matches the `id` parameter.
 #[tauri::command]
 pub fn delete_notification(id: i64) {
   let conn = get_db().unwrap();
