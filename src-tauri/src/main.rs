@@ -16,6 +16,8 @@ use models::notification::{get_notifications, create_notification, delete_notifi
 use helpers::database::create_db_if_not_exists;
 use tauri::{Manager, Window, Config};
 
+// Global variables for easily accessing important parts of the app without wrangling a bunch of code around.
+// Until a better solution comes up, global variables will be the easiest way to access these values.
 pub static GLOBAL_WINDOW: Mutex<Option<Window>> = Mutex::new(None);
 pub static GLOBAL_CONFIG: Mutex<Option<Arc<Config>>> = Mutex::new(None);
 

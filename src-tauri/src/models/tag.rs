@@ -1,6 +1,8 @@
 use crate::helpers::database::get_db;
 use serde::{Serialize, Deserialize};
 
+/// A Tag struct meant to be used with the SQLite3 database Komishon uses.
+/// Has fields for each column on the TAGS table.
 #[derive(Serialize, Deserialize)]
 #[derive(Clone)]
 pub struct Tag {
@@ -11,6 +13,8 @@ pub struct Tag {
     pub color: String
 }
 
+/// Inserts a tag into the database.
+/// Returns the inserted tag as a JSON string.
 #[tauri::command]
 pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
     let conn = get_db().unwrap();
@@ -40,6 +44,7 @@ pub fn add_tag_to_file(tag: Tag) -> Result<Tag, &'static str> {
     }
 }
 
+/// Removes a tag from the database where the ID matches the id of the `tag` parameter.
 #[tauri::command]
 pub fn remove_tag_from_file(tag: Tag) {
     let conn = get_db().unwrap();
