@@ -6,14 +6,17 @@ const deadlines = {
   },
   getters: {},
   mutations: {
+    // Assigns the `deadlines` parameter to `state.deadlines`
     setDeadlines(state, deadlines) {
       state.deadlines = deadlines;
     },
+    // Adds a deadline object to `state.deadlines`
     addDeadline(state, deadline) {
       state.deadlines.push(deadline);
     },
   },
   actions: {
+    // Invokes the get_deadlines function from the backend and assigns the returned value to `state.deadlines`.
     async loadDeadlines({ commit }) {
       const res = await invoke("get_deadlines");
       const deadlines = JSON.parse(res);
@@ -21,6 +24,7 @@ const deadlines = {
 
       return deadlines;
     },
+    // Invokes the get_files_by_deadline function and returns a vector of File objects.
     async getFilesByDeadlineDate(ctx, deadline) {
       const unixStamp = Math.floor(deadline.getTime() / 1000);
 
@@ -31,6 +35,7 @@ const deadlines = {
 
       return files;
     },
+    // Returns a filtered deadlines array where deadlines with a due date before the current date are removed.
     getUpcomingDeadlines(ctx) {
       const deadlines = ctx.state.deadlines;
       const today = new Date();
@@ -45,6 +50,7 @@ const deadlines = {
 
       return upcomingDeadlines;
     },
+    // Returns a filtered deadlines array where deadlines with a due date before the current date are removed.
     getPastDeadlines(ctx) {
       const deadlines = ctx.state.deadlines;
       const today = new Date();
