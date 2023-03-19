@@ -66,7 +66,7 @@
 
 ## About The Project
 
-![Komishon Screenshot](https://i.imgur.com/aQ2WU7J.png "Main Page").
+![Komishon Screenshot](https://i.imgur.com/aQ2WU7J.png "Main Page")
 
 Komishon is an app for efficiently tracking commissions while keeping your files organized.
 With features such as tagging for easy organization, and deadline reports for quick reminders for catching up on work, Komishon makes tracking your projects easier.
@@ -119,7 +119,7 @@ To build, test and run the backend code for Komishon, start by installing Rust b
 
 Then, ensure that you have the necessary libraries for running Tauri:
 
-On Windows - which is currently our only supported operating system - you will need:
+On Windows - which is currently the only supported operating system - you will need:
 
 - [Microsoft Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
 - [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section)
@@ -136,7 +136,7 @@ On Windows - which is currently our only supported operating system - you will n
 - [x] Add changelogs to releases
 - [x] Refactor code
 - [x] Revamp UI
-- [ ] Add notifications
+- [x] Add notifications
 
 **After v1.0:**
 
